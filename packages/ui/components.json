@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "prefix": "",
+    "cssVariables": true,
+    "baseColor": "neutral",
+    "css": "src/styles/default.css"
+  },
+  "aliases": {
+    "components": "@marketplace-watcher/ui/components",
+    "ui": "@marketplace-watcher/ui/components/base",
+    "utils": "@marketplace-watcher/ui/lib/utils",
+    "hooks": "@marketplace-watcher/ui/hooks",
+    "lib": "@marketplace-watcher/ui/lib"
+  },
+  "iconLibrary": "lucide"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@marketplace-watcher/supabase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "supabase status || supabase start",
+    "reset": "supabase db reset || supabase start",
+    "test": "supabase db test",
+    "lint": "supabase db lint",
+    "deploy": "supabase link --project-ref $SUPABASE_PROJECT_REF && supabase db push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "supabase": "^2.26.9"
+  }
+}

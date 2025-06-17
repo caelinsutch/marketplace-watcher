@@ -1,0 +1,1 @@
+export { default } from "@marketplace-watcher/ui/postcss.config";
