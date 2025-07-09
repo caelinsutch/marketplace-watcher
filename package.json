@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format-lint:fix": "biome check --write",
+    "format-lint": "biome check --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

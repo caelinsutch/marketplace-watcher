@@ -9,6 +9,10 @@
   },
   "dependencies": {
     "@marketplace-watcher/ui": "workspace:*",
+    "@marketplace-watcher/db": "workspace:*",
+    "@marketplace-watcher/orpc": "workspace:*",
+    "@orpc/client": "^1.5.2",
+    "@orpc/server": "^1.5.2",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@t3-oss/env-nextjs": "^0.13.8",
@@ -23,7 +27,8 @@
     "tailwind-animate": "^0.2.10",
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.4",
-    "zod": "^3.25.67"
+    "zod": "^3.25.67",
+    "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
     "@marketplace-watcher/typescript-config": "workspace:*",

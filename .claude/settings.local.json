@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "allow": ["Bash(npm run build:*)", "WebFetch(domain:orpc.unnoq.com)"],
+    "deny": []
+  }
+}

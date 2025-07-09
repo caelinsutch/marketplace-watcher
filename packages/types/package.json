@@ -1,0 +1,17 @@
+{
+  "name": "@marketplace-watcher/types",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@marketplace-watcher/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@marketplace-watcher/typescript-config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

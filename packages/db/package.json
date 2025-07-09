@@ -1,10 +1,10 @@
 {
-  "name": "db",
+  "name": "@marketplace-watcher/db",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "type:check": "tsc --noEmit",
     "dev": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "drizzle-kit generate",
