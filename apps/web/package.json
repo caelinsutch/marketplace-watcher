@@ -8,27 +8,30 @@
     "ui": "pnpm dlx shadcn@latest"
   },
   "dependencies": {
-    "@marketplace-watcher/ui": "workspace:*",
+    "@hookform/resolvers": "^5.1.1",
     "@marketplace-watcher/db": "workspace:*",
     "@marketplace-watcher/orpc": "workspace:*",
+    "@marketplace-watcher/ui": "workspace:*",
     "@orpc/client": "^1.5.2",
     "@orpc/server": "^1.5.2",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tailwindcss/postcss": "^4.1.10",
+    "apify-client": "^2.12.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.44.2",
     "lucide-react": "catalog:",
     "next": "latest",
     "next-themes": "^0.4.6",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-hook-form": "^7.60.0",
     "tailwind-animate": "^0.2.10",
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.4",
-    "zod": "^3.25.67",
-    "drizzle-orm": "^0.44.2"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@marketplace-watcher/typescript-config": "workspace:*",

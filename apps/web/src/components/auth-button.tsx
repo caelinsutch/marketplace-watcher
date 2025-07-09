@@ -1,6 +1,6 @@
-import { createClient } from "@/supabase/server";
 import { Button } from "@marketplace-watcher/ui/components/ui/button";
 import Link from "next/link";
+import { createClient } from "../supabase/server";
 import { LogoutButton } from "./logout-button";
 
 export async function AuthButton() {

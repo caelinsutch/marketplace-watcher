@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/lib/orpc.server.ts"
+    "src/lib/orpc.server.ts",
+    "src/supabase/server.ts"
   ],
   "exclude": ["node_modules"]
 }

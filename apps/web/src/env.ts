@@ -5,6 +5,7 @@ export const env = createEnv({
   server: {
     APIFY_API_KEY: z.string().min(1),
     DATABASE_URL: z.string(),
+    RESEND_API_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
@@ -15,5 +16,6 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     APIFY_API_KEY: process.env.APIFY_API_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
 });
