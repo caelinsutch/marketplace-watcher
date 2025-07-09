@@ -5,7 +5,11 @@
       "WebFetch(domain:orpc.unnoq.com)",
       "Bash(git commit:*)",
       "Bash(pnpm add:*)",
-      "Bash(turbo type:*)"
+      "Bash(turbo type:*)",
+      "Bash(pnpm:*)",
+      "Bash(turbo:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

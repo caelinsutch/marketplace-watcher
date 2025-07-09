@@ -24,12 +24,7 @@ export const monitors = pgTable("monitors", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }).notNull(),
-  query: text("query"),
-  photoUrl: text("photo_url"), // IGNORE THIS FOR NOW
-  areaId: varchar("area_id", { length: 100 }).notNull(),
-  minPrice: decimal("min_price", { precision: 10, scale: 2 }),
-  maxPrice: decimal("max_price", { precision: 10, scale: 2 }),
-  condition: varchar("condition", { length: 20 }), // 'new', 'used', 'any'
+  url: text("url").notNull(), // Facebook Marketplace URL i.e. https://www.facebook.com/marketplace/nyc/search/?query=desk&maxPrice=200&sortBy=creation_time_descend
   checkFrequency: varchar("check_frequency", { length: 20 })
     .notNull()
     .default("daily"), // 'hourly', 'daily', 'weekly'
@@ -42,31 +37,8 @@ export const monitors = pgTable("monitors", {
 export const listings = pgTable("listings", {
   id: varchar("id", { length: 255 }).primaryKey(), // Facebook Marketplace ID
   title: text("title").notNull(),
-  description: text("description"),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  condition: varchar("condition", { length: 20 }),
   location: text("location"),
-
-  // Price comparison fields
-  strikeThroughPrice: decimal("strike_through_price", {
-    precision: 10,
-    scale: 2,
-  }),
-  comparablePrice: decimal("comparable_price", { precision: 10, scale: 2 }),
-  comparablePriceType: varchar("comparable_price_type", { length: 50 }),
-
-  // Status flags
-  isHidden: boolean("is_hidden").notNull().default(false),
-  isLive: boolean("is_live").notNull().default(true),
-  isPending: boolean("is_pending").notNull().default(false),
-  isSold: boolean("is_sold").notNull().default(false),
-
-  // Category and delivery
-  categoryId: varchar("category_id", { length: 100 }),
-  deliveryTypes: jsonb("delivery_types")
-    .$type<string[]>()
-    .notNull()
-    .default([]),
 
   // Location details
   locationDetails: jsonb("location_details").$type<{
@@ -78,11 +50,6 @@ export const listings = pgTable("listings", {
 
   photos: jsonb("photos").$type<string[]>().notNull().default([]),
   primaryPhotoUrl: text("primary_photo_url"),
-  sellerInfo: jsonb("seller_info").$type<{
-    name?: string;
-    id?: string;
-    profileUrl?: string;
-  }>(),
   marketplaceUrl: text("marketplace_url").notNull(),
   firstSeenAt: timestamp("first_seen_at").defaultNow().notNull(),
   lastSeenAt: timestamp("last_seen_at").defaultNow().notNull(),

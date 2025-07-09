@@ -10,12 +10,14 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx src/seed.ts"
   },
   "devDependencies": {
     "@marketplace-watcher/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "drizzle-kit": "^0.31.1",
+    "tsx": "^4.20.3",
     "typescript": "catalog:"
   },
   "keywords": [],

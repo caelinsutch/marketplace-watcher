@@ -5,12 +5,7 @@ import { base } from "./base";
 
 const createMonitorSchema = z.object({
   name: z.string().min(1).max(255),
-  query: z.string().optional(),
-  photoUrl: z.string().url().optional(),
-  areaId: z.string().min(1).max(100),
-  minPrice: z.string().optional(),
-  maxPrice: z.string().optional(),
-  condition: z.enum(["new", "used", "any"]).optional(),
+  url: z.string().url(),
   checkFrequency: z.enum(["hourly", "daily", "weekly"]).default("daily"),
 });
 

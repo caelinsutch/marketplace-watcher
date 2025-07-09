@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/supabase/client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@marketplace-watcher/ui/components/ui/button";
 import {
   Card,
@@ -12,7 +13,6 @@ import {
 import { Input } from "@marketplace-watcher/ui/components/ui/input";
 import { Label } from "@marketplace-watcher/ui/components/ui/label";
 import { cn } from "@marketplace-watcher/ui/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

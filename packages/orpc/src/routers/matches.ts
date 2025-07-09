@@ -1,10 +1,11 @@
 import {
   db,
+  listingPriceHistory,
   listings,
   monitorMatches,
   monitors,
 } from "@marketplace-watcher/db";
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { base } from "./base";
 
@@ -16,6 +17,9 @@ export const matchesRouter = {
         userId: z.string().uuid(),
         limit: z.number().min(1).max(100).default(20),
         offset: z.number().min(0).default(0),
+        onlyUnread: z.boolean().optional(),
+        sortBy: z.enum(["date", "price"]).optional().default("date"),
+        sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
       }),
     )
     .handler(async ({ input, errors }) => {
@@ -34,8 +38,14 @@ export const matchesRouter = {
         throw errors.NOT_FOUND({ message: "Monitor not found" });
       }
 
+      // Build where conditions
+      const whereConditions = [eq(monitorMatches.monitorId, input.monitorId)];
+      if (input.onlyUnread) {
+        whereConditions.push(eq(monitorMatches.isNotified, false));
+      }
+
       // Get matches with listings
-      const matches = await db
+      const query = db
         .select({
           id: monitorMatches.id,
           matchedAt: monitorMatches.matchedAt,
@@ -43,12 +53,11 @@ export const matchesRouter = {
           listing: {
             id: listings.id,
             title: listings.title,
-            description: listings.description,
             price: listings.price,
-            condition: listings.condition,
             location: listings.location,
+            locationDetails: listings.locationDetails,
             photos: listings.photos,
-            sellerInfo: listings.sellerInfo,
+            primaryPhotoUrl: listings.primaryPhotoUrl,
             marketplaceUrl: listings.marketplaceUrl,
             firstSeenAt: listings.firstSeenAt,
             lastSeenAt: listings.lastSeenAt,
@@ -56,12 +65,62 @@ export const matchesRouter = {
         })
         .from(monitorMatches)
         .innerJoin(listings, eq(monitorMatches.listingId, listings.id))
-        .where(eq(monitorMatches.monitorId, input.monitorId))
-        .orderBy(desc(monitorMatches.matchedAt))
-        .limit(input.limit)
-        .offset(input.offset);
+        .where(and(...whereConditions));
 
-      return matches;
+      // Apply sorting
+      if (input.sortBy === "price") {
+        query.orderBy(
+          input.sortOrder === "desc"
+            ? desc(listings.price)
+            : asc(listings.price),
+        );
+      } else {
+        query.orderBy(
+          input.sortOrder === "desc"
+            ? desc(monitorMatches.matchedAt)
+            : asc(monitorMatches.matchedAt),
+        );
+      }
+
+      const matches = await query.limit(input.limit).offset(input.offset);
+
+      // Get price history for each listing
+      const listingIds = matches.map((m) => m.listing.id);
+      const priceHistories = await db
+        .select({
+          listingId: listingPriceHistory.listingId,
+          price: listingPriceHistory.price,
+          recordedAt: listingPriceHistory.recordedAt,
+        })
+        .from(listingPriceHistory)
+        .where(
+          listingIds.length > 0
+            ? inArray(listingPriceHistory.listingId, listingIds)
+            : sql`false`,
+        )
+        .orderBy(desc(listingPriceHistory.recordedAt));
+
+      // Group price histories by listing
+      const priceHistoryMap = priceHistories.reduce<
+        Record<string, Array<{ price: string; recordedAt: Date }>>
+      >((acc, history) => {
+        if (!acc[history.listingId]) {
+          acc[history.listingId] = [];
+        }
+        acc[history.listingId].push({
+          price: history.price,
+          recordedAt: history.recordedAt,
+        });
+        return acc;
+      }, {});
+
+      // Add price history to matches
+      const matchesWithPriceHistory = matches.map((match) => ({
+        ...match,
+        priceHistory: priceHistoryMap[match.listing.id] || [],
+      }));
+
+      return matchesWithPriceHistory;
     }),
 
   markNotified: base
@@ -140,5 +199,43 @@ export const matchesRouter = {
         totalMatches: totalMatches[0]?.count || 0,
         unnotifiedMatches: unnotifiedMatches[0]?.count || 0,
       };
+    }),
+
+  markAllNotified: base
+    .input(
+      z.object({
+        monitorId: z.string().uuid(),
+        userId: z.string().uuid(),
+      }),
+    )
+    .handler(async ({ input, errors }) => {
+      // Verify monitor ownership
+      const [monitor] = await db
+        .select()
+        .from(monitors)
+        .where(
+          and(
+            eq(monitors.id, input.monitorId),
+            eq(monitors.userId, input.userId),
+          ),
+        );
+
+      if (!monitor) {
+        throw errors.NOT_FOUND({ message: "Monitor not found" });
+      }
+
+      // Update all unnotified matches for this monitor
+      const updated = await db
+        .update(monitorMatches)
+        .set({ isNotified: true })
+        .where(
+          and(
+            eq(monitorMatches.monitorId, input.monitorId),
+            eq(monitorMatches.isNotified, false),
+          ),
+        )
+        .returning();
+
+      return { count: updated.length };
     }),
 };
