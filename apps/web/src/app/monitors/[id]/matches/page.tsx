@@ -19,29 +19,18 @@ export default async function MatchesPage({
   const { id: monitorId } = await params;
 
   // Fetch monitor
-  let monitor: Awaited<ReturnType<typeof client.monitors.get>>;
-  try {
-    monitor = await client.monitors.get({
-      id: monitorId,
-      userId: data.user.id,
-    });
-  } catch (_err) {
-    // Handle error - monitor not found or user doesn't have access
-    redirect("/monitors");
-  }
+  const monitor = await client.monitors.get({
+    id: monitorId,
+    userId: data.user.id,
+  });
 
   // Fetch initial matches
-  let initialMatches = [];
-  try {
-    initialMatches = await client.matches.getByMonitor({
-      monitorId,
-      userId: data.user.id,
-      limit: 20,
-      offset: 0,
-    });
-  } catch (_err) {
-    console.error("Failed to fetch initial matches:", _err);
-  }
+  const initialMatches = await client.matches.getByMonitor({
+    monitorId,
+    userId: data.user.id,
+    limit: 20,
+    offset: 0,
+  });
 
   return (
     <>
