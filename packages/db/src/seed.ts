@@ -1,28 +1,93 @@
+import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { config } from "dotenv";
-import { users, monitors, listings, monitorMatches, listingPriceHistory } from "./schema";
+import {
+  listingPriceHistory,
+  listings,
+  monitorMatches,
+  monitors,
+  users,
+} from "./schema";
 
-config({ path: "../../.env" });
+config();
 
-const connectionString = process.env.DATABASE_URL!;
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not set");
+}
+
 const sql = postgres(connectionString, { max: 1 });
 const db = drizzle(sql);
 
 async function seed() {
   console.log("🌱 Seeding database...");
 
-  // Create a demo user
+  // Create a demo user in Supabase Auth first
   const demoUserId = "00000000-0000-0000-0000-000000000001";
+  const demoEmail = "demo@marketplace-watcher.com";
+  const demoPassword = "demo123456"; // Simple password for demo
+
+  console.log("🔐 Creating demo user in Supabase Auth...");
+
+  // Create the auth user with the specific UUID
+  await sql`
+    INSERT INTO auth.users (
+      instance_id, id, aud, role, email, encrypted_password, 
+      email_confirmed_at, recovery_sent_at, last_sign_in_at, 
+      raw_app_meta_data, raw_user_meta_data, created_at, updated_at, 
+      confirmation_token, email_change, email_change_token_new, recovery_token
+    ) 
+    VALUES (
+      '00000000-0000-0000-0000-000000000000', 
+      ${demoUserId}::uuid, 
+      'authenticated', 
+      'authenticated', 
+      ${demoEmail}, 
+      crypt(${demoPassword}, gen_salt('bf')), 
+      current_timestamp, 
+      current_timestamp, 
+      current_timestamp, 
+      '{"provider":"email","providers":["email"]}'::jsonb, 
+      '{}'::jsonb, 
+      current_timestamp, 
+      current_timestamp, 
+      '', '', '', ''
+    )
+    ON CONFLICT (id) DO NOTHING
+  `;
+
+  // Create the auth identity
+  await sql`
+    INSERT INTO auth.identities (id, user_id, identity_data, provider, provider_id, last_sign_in_at, created_at, updated_at)
+    VALUES (
+      gen_random_uuid(), 
+      ${demoUserId}::uuid, 
+      ${JSON.stringify({
+        sub: demoUserId,
+        email: demoEmail,
+      })}::jsonb, 
+      'email', 
+      gen_random_uuid(), 
+      current_timestamp, 
+      current_timestamp, 
+      current_timestamp
+    )
+    ON CONFLICT (provider, provider_id) DO NOTHING
+  `;
+
+  console.log("✅ Created demo user in Supabase Auth");
+
+  // Create the application user record
   await db
     .insert(users)
     .values({
       id: demoUserId,
-      email: "demo@marketplace-watcher.com",
+      email: demoEmail,
     })
     .onConflictDoNothing();
 
-  console.log("✅ Created demo user");
+  console.log("✅ Created demo user in application database");
 
   // Create monitors
   const monitorsData = [
@@ -76,7 +141,8 @@ async function seed() {
         "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
         "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/123456789",
       firstSeenAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       lastSeenAt: new Date(),
@@ -91,7 +157,8 @@ async function seed() {
         "https://images.unsplash.com/photo-1549497538-303791108f95?w=800",
         "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1549497538-303791108f95?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1549497538-303791108f95?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/223456789",
       firstSeenAt: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
       lastSeenAt: new Date(),
@@ -105,7 +172,8 @@ async function seed() {
       photos: [
         "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/323456789",
       firstSeenAt: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
       lastSeenAt: new Date(),
@@ -114,7 +182,7 @@ async function seed() {
     // MacBook Pro listings
     {
       id: "fb_listing_4",
-      title: "MacBook Pro 16\" M1 Max - Like New",
+      title: 'MacBook Pro 16" M1 Max - Like New',
       price: "1800.00",
       location: "San Francisco, CA",
       locationDetails: { cityDisplayName: "San Francisco", state: "CA" },
@@ -122,21 +190,23 @@ async function seed() {
         "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
         "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/423456789",
       firstSeenAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
       lastSeenAt: new Date(),
     },
     {
       id: "fb_listing_5",
-      title: "MacBook Pro 14\" M2 Pro 1TB",
+      title: 'MacBook Pro 14" M2 Pro 1TB',
       price: "1500.00",
       location: "Oakland, CA",
       locationDetails: { cityDisplayName: "Oakland", state: "CA" },
       photos: [
         "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/523456789",
       firstSeenAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
       lastSeenAt: new Date(),
@@ -153,7 +223,8 @@ async function seed() {
         "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800",
         "https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/623456789",
       firstSeenAt: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
       lastSeenAt: new Date(),
@@ -167,7 +238,8 @@ async function seed() {
       photos: [
         "https://images.unsplash.com/photo-1502744688674-c619d1586c9e?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1502744688674-c619d1586c9e?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1502744688674-c619d1586c9e?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/723456789",
       firstSeenAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
       lastSeenAt: new Date(),
@@ -183,7 +255,8 @@ async function seed() {
       photos: [
         "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800",
       ],
-      primaryPhotoUrl: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800",
+      primaryPhotoUrl:
+        "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/823456789",
       firstSeenAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
       lastSeenAt: new Date(),
@@ -294,13 +367,16 @@ async function seed() {
     },
   ];
 
-  await db.insert(listingPriceHistory).values(priceHistoryData).onConflictDoNothing();
+  await db
+    .insert(listingPriceHistory)
+    .values(priceHistoryData)
+    .onConflictDoNothing();
   console.log("✅ Created price history");
 
   console.log("✨ Database seeded successfully!");
   console.log("\n📧 Demo user credentials:");
-  console.log("Email: demo@marketplace-watcher.com");
-  console.log("Password: Set up through Supabase Auth");
+  console.log(`Email: ${demoEmail}`);
+  console.log(`Password: ${demoPassword}`);
 }
 
 seed()

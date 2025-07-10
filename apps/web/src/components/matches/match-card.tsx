@@ -10,6 +10,11 @@ import {
   CardHeader,
 } from "@marketplace-watcher/ui/components/ui/card";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@marketplace-watcher/ui/components/ui/tooltip";
+import {
   CalendarIcon,
   CheckIcon,
   ExternalLinkIcon,
@@ -24,7 +29,9 @@ const PriceDisplay = ({
 }: { listing: Match["listing"]; priceHistory: Match["priceHistory"] }) => {
   const currentPrice = Number.parseFloat(listing.price);
   const previousPrice =
-    priceHistory.length > 0 ? Number.parseFloat(priceHistory[0].price) : null;
+    priceHistory.length > 0 && priceHistory[0]
+      ? Number.parseFloat(priceHistory[0].price)
+      : null;
   const hasPriceDropped = previousPrice && previousPrice > currentPrice;
 
   return (
@@ -65,7 +72,7 @@ export const MatchCard = ({
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-all duration-200 card-hover">
+    <Card className="overflow-hidden hover:shadow-sm transition-all duration-200 card-hover">
       <ImageCarousel images={match.listing.photos} />
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between gap-2">
@@ -111,14 +118,21 @@ export const MatchCard = ({
           </a>
         </Button>
         {!match.isNotified && (
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => onMarkAsRead(match.id)}
-            aria-label="Mark as read"
-          >
-            <CheckIcon className="h-4 w-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => onMarkAsRead(match.id)}
+                aria-label="Mark as read"
+              >
+                <CheckIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Mark as read</p>
+            </TooltipContent>
+          </Tooltip>
         )}
       </CardFooter>
     </Card>

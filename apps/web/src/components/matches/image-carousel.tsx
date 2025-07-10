@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 
 export const ImageCarousel = ({ images }: { images: string[] }) => {
@@ -25,12 +24,10 @@ export const ImageCarousel = ({ images }: { images: string[] }) => {
 
   return (
     <div className="relative w-full h-64 bg-black rounded-t-lg overflow-hidden group">
-      <Image
+      <img
         src={images[currentIndex]}
         alt="Listing image"
-        fill
         className="object-contain"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
       {images.length > 1 && (
         <>

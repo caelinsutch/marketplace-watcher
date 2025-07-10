@@ -43,6 +43,8 @@
     "@types/react-dom": "catalog:",
     "@vitest/ui": "^2.1.8",
     "autoprefixer": "^10",
+    "eslint": "^9.30.1",
+    "eslint-config-next": "15.3.5",
     "postcss": "^8",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",

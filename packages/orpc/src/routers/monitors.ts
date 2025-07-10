@@ -1,4 +1,4 @@
-import { db, monitors } from "@marketplace-watcher/db";
+import { db, monitors, users } from "@marketplace-watcher/db";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { base } from "./base";
@@ -58,10 +58,26 @@ export const monitorsRouter = {
     .input(
       z.object({
         userId: z.string().uuid(),
+        userEmail: z.string().email().optional(),
         data: createMonitorSchema,
       }),
     )
     .handler(async ({ input }) => {
+      // First, ensure the user exists in the database
+      const [existingUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, input.userId));
+
+      if (!existingUser) {
+        // Create the user if they don't exist
+        await db.insert(users).values({
+          id: input.userId,
+          email: input.userEmail || `user-${input.userId}@example.com`,
+        });
+      }
+
+      // Now create the monitor
       const [monitor] = await db
         .insert(monitors)
         .values({

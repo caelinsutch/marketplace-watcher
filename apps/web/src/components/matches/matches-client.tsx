@@ -25,8 +25,8 @@ import { useCallback, useEffect, useState } from "react";
 import { MatchCard } from "./match-card";
 
 const EmptyState = ({ onlyUnread }: { onlyUnread: boolean }) => (
-  <div className="flex flex-col items-center justify-center py-20 px-4 animate-scale-in">
-    <div className="rounded-full bg-muted p-4 mb-4 animate-float">
+  <div className="flex flex-col items-center justify-center py-20 px-4 ">
+    <div className="rounded-full bg-muted p-4 mb-4 ">
       <InboxIcon className="h-8 w-8 text-muted-foreground" />
     </div>
     <h3 className="text-lg font-semibold mb-2">
@@ -43,10 +43,17 @@ const EmptyState = ({ onlyUnread }: { onlyUnread: boolean }) => (
 const LoadingSkeleton = () => (
   <div className="grid gap-6 grid-cols-1 md:grid-cols-2 stagger-fade-in">
     {[...Array(4)].map((_, i) => (
-      <Card key={i} className="overflow-hidden animate-scale-in" style={{ animationDelay: `${i * 100}ms` }}>
+      <Card
+        key={i}
+        className="overflow-hidden "
+        style={{ animationDelay: `${i * 100}ms` }}
+      >
         <div className="w-full h-64 bg-muted skeleton" />
         <div className="p-6 space-y-2">
-          <div className="h-6 bg-muted rounded skeleton" style={{ width: "75%" }} />
+          <div
+            className="h-6 bg-muted rounded skeleton"
+            style={{ width: "75%" }}
+          />
           <div className="h-8 w-24 bg-muted rounded skeleton" />
         </div>
         <div className="px-6 pb-6 space-y-3">

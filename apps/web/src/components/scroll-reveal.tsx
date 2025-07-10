@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { cn } from "@marketplace-watcher/ui/lib/utils";
+import { useEffect, useRef, useState } from "react";
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -9,7 +9,11 @@ interface ScrollRevealProps {
   delay?: number;
 }
 
-export const ScrollReveal = ({ children, className, delay = 0 }: ScrollRevealProps) => {
+export const ScrollReveal = ({
+  children,
+  className,
+  delay = 0,
+}: ScrollRevealProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -26,7 +30,7 @@ export const ScrollReveal = ({ children, className, delay = 0 }: ScrollRevealPro
       {
         threshold: 0.1,
         rootMargin: "0px 0px -50px 0px",
-      }
+      },
     );
 
     if (ref.current) {
@@ -41,11 +45,7 @@ export const ScrollReveal = ({ children, className, delay = 0 }: ScrollRevealPro
   return (
     <div
       ref={ref}
-      className={cn(
-        "scroll-reveal",
-        isVisible && "revealed",
-        className
-      )}
+      className={cn("scroll-reveal", isVisible && "revealed", className)}
     >
       {children}
     </div>

@@ -47,6 +47,7 @@ export default function NewMonitorPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const router = useRouter();
 
@@ -62,19 +63,31 @@ export default function NewMonitorPage() {
     },
   });
 
-  // Get user ID on mount
+  // Get user ID and email on mount
   useEffect(() => {
-    const getUserId = async () => {
+    const getUserData = async () => {
       const supabase = createClient();
       const { data } = await supabase.auth.getUser();
       if (data?.user?.id) {
         setUserId(data.user.id);
+        setUserEmail(data.user.email || null);
       }
     };
-    getUserId();
+    getUserData();
   }, []);
 
   const onSubmit = async (data: CreateMonitorFormData) => {
+    // Prevent submission if not on the final step
+    if (currentStep !== 3) {
+      return;
+    }
+
+    // Validate that all required fields are filled
+    if (!data.name || !data.url) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
     if (!userId) {
       setError("You must be logged in to create a monitor");
       return;
@@ -86,6 +99,7 @@ export default function NewMonitorPage() {
     try {
       await client.monitors.create({
         userId,
+        userEmail: userEmail || undefined,
         data: {
           name: data.name,
           url: data.url,
@@ -99,6 +113,19 @@ export default function NewMonitorPage() {
       );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Handle Enter key to advance to next step
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (currentStep === 1 && watch("name")) {
+        setCurrentStep(2);
+      } else if (currentStep === 2 && watch("url")) {
+        setCurrentStep(3);
+      }
+      // On step 3, let the form submit naturally
     }
   };
 
@@ -147,88 +174,109 @@ export default function NewMonitorPage() {
             </p>
           </div>
 
-      {/* Progress Steps */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          {steps.map((step, index) => (
-            <div key={step.number} className="flex items-center flex-1">
-              <div className="flex items-center">
+          {/* Progress Steps */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              {steps.map((step, index) => (
                 <div
+                  key={step.number}
                   className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
-                    currentStep >= step.number
-                      ? "bg-primary text-primary-foreground border-primary animate-scale-in"
-                      : "bg-background text-muted-foreground border-muted",
+                    "flex items-center transition-all duration-300",
+                    // On mobile, active step gets more space, others stay compact
+                    currentStep === step.number
+                      ? "flex-1 md:flex-1"
+                      : "flex-none md:flex-1",
                   )}
                 >
-                  {currentStep > step.number ? (
-                    <CheckCircle2 className="h-5 w-5 animate-success" />
-                  ) : (
-                    <step.icon className="h-5 w-5" />
+                  <div className="flex items-center">
+                    <div
+                      className={cn(
+                        "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300",
+                        currentStep >= step.number
+                          ? "bg-primary text-primary-foreground border-primary animate-scale-in"
+                          : "bg-background text-muted-foreground border-muted",
+                      )}
+                    >
+                      {currentStep > step.number ? (
+                        <CheckCircle2 className="h-5 w-5 animate-success" />
+                      ) : (
+                        <step.icon className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div
+                      className={cn(
+                        "ml-3",
+                        // Hide step titles on mobile except for current step
+                        currentStep === step.number
+                          ? "block"
+                          : "hidden md:block",
+                      )}
+                    >
+                      <p
+                        className={cn(
+                          "text-sm font-medium whitespace-nowrap",
+                          currentStep >= step.number
+                            ? "text-foreground"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {step.title}
+                      </p>
+                    </div>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={cn(
+                        "h-0.5 mx-4 transition-all",
+                        // Adjust connector width based on whether current step is active
+                        currentStep === step.number
+                          ? "flex-1 min-w-4"
+                          : "w-4 md:flex-1",
+                        currentStep > step.number ? "bg-primary" : "bg-muted",
+                      )}
+                    />
                   )}
                 </div>
-                <div className="ml-3">
-                  <p
-                    className={cn(
-                      "text-sm font-medium",
-                      currentStep >= step.number
-                        ? "text-foreground"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {step.title}
-                  </p>
-                </div>
-              </div>
-              {index < steps.length - 1 && (
-                <div
-                  className={cn(
-                    "flex-1 h-0.5 mx-4 transition-all",
-                    currentStep > step.number ? "bg-primary" : "bg-muted",
-                  )}
-                />
-              )}
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-6">
-          {/* Step 1: Basic Information */}
-          {currentStep === 1 && (
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-                <CardDescription>
-                  Give your monitor a name and description to easily identify it
-                  later
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Monitor Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="e.g., Vintage Furniture under $200"
-                    {...register("name")}
-                    className="text-lg"
-                  />
-                  {errors.name && (
-                    <p className="text-sm text-destructive flex items-center">
-                      <AlertCircle className="h-4 w-4 mr-1" />
-                      {errors.name.message}
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground">
-                    Choose a descriptive name that helps you remember what this
-                    monitor tracks
-                  </p>
-                </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
+            <div className="space-y-6">
+              {/* Step 1: Basic Information */}
+              {currentStep === 1 && (
+                <Card className="animate-scale-in">
+                  <CardHeader>
+                    <CardTitle>Basic Information</CardTitle>
+                    <CardDescription>
+                      Give your monitor a name and description to easily
+                      identify it later
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Monitor Name</Label>
+                      <Input
+                        id="name"
+                        placeholder="e.g., Vintage Furniture under $200"
+                        {...register("name")}
+                        className="text-lg"
+                      />
+                      {errors.name && (
+                        <p className="text-sm text-destructive flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {errors.name.message}
+                        </p>
+                      )}
+                      <p className="text-sm text-muted-foreground">
+                        Choose a descriptive name that helps you remember what
+                        this monitor tracks
+                      </p>
+                    </div>
 
-                {/* Future: Add description field */}
-                {/* <div className="space-y-2">
+                    {/* Future: Add description field */}
+                    {/* <div className="space-y-2">
                   <Label htmlFor="description">Description (Optional)</Label>
                   <Textarea
                     id="description"
@@ -236,15 +284,15 @@ export default function NewMonitorPage() {
                     className="min-h-[100px]"
                   />
                 </div> */}
-              </CardContent>
-            </Card>
-          )}
+                  </CardContent>
+                </Card>
+              )}
 
-          {/* Step 2: Search Settings */}
-          {currentStep === 2 && (
-            <div className="space-y-6 animate-scale-in">
-              {/* Search Type Toggle - Future Enhancement */}
-              {/* <Card>
+              {/* Step 2: Search Settings */}
+              {currentStep === 2 && (
+                <div className="space-y-6 animate-scale-in">
+                  {/* Search Type Toggle - Future Enhancement */}
+                  {/* <Card>
                 <CardContent className="pt-6">
                   <div className="flex gap-4">
                     <Button
@@ -269,52 +317,54 @@ export default function NewMonitorPage() {
                 </CardContent>
               </Card> */}
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Facebook Marketplace URL</CardTitle>
-                  <CardDescription>
-                    Paste the URL from your Facebook Marketplace search
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="url">Marketplace URL</Label>
-                    <Input
-                      id="url"
-                      type="url"
-                      placeholder="https://www.facebook.com/marketplace/nyc/search/?query=desk"
-                      {...register("url")}
-                      className="font-mono text-sm"
-                    />
-                    {errors.url && (
-                      <p className="text-sm text-destructive flex items-center">
-                        <AlertCircle className="h-4 w-4 mr-1" />
-                        {errors.url.message}
-                      </p>
-                    )}
-                    <div className="text-sm text-muted-foreground space-y-2">
-                      <p>How to get your Marketplace URL:</p>
-                      <ol className="list-decimal list-inside space-y-1 ml-2">
-                        <li>Go to Facebook Marketplace</li>
-                        <li>Search for items using your criteria</li>
-                        <li>Apply any filters (price, location, category)</li>
-                        <li>Copy the URL from your browser</li>
-                      </ol>
-                    </div>
-                  </div>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Facebook Marketplace URL</CardTitle>
+                      <CardDescription>
+                        Paste the URL from your Facebook Marketplace search
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="url">Marketplace URL</Label>
+                        <Input
+                          id="url"
+                          type="url"
+                          placeholder="https://www.facebook.com/marketplace/nyc/search/?query=desk"
+                          {...register("url")}
+                          className="font-mono text-sm"
+                        />
+                        {errors.url && (
+                          <p className="text-sm text-destructive flex items-center">
+                            <AlertCircle className="h-4 w-4 mr-1" />
+                            {errors.url.message}
+                          </p>
+                        )}
+                        <div className="text-sm text-muted-foreground space-y-2">
+                          <p>How to get your Marketplace URL:</p>
+                          <ol className="list-decimal list-inside space-y-1 ml-2">
+                            <li>Go to Facebook Marketplace</li>
+                            <li>Search for items using your criteria</li>
+                            <li>
+                              Apply any filters (price, location, category)
+                            </li>
+                            <li>Copy the URL from your browser</li>
+                          </ol>
+                        </div>
+                      </div>
 
-                  {location && (
-                    <div className="bg-muted/50 rounded-lg p-4 flex items-center">
-                      <MapPin className="h-5 w-5 mr-2 text-muted-foreground" />
-                      <span className="text-sm">
-                        Searching in:{" "}
-                        <strong className="capitalize">{location}</strong>
-                      </span>
-                    </div>
-                  )}
+                      {location && (
+                        <div className="bg-muted/50 rounded-lg p-4 flex items-center">
+                          <MapPin className="h-5 w-5 mr-2 text-muted-foreground" />
+                          <span className="text-sm">
+                            Searching in:{" "}
+                            <strong className="capitalize">{location}</strong>
+                          </span>
+                        </div>
+                      )}
 
-                  {/* Future: Price Range */}
-                  {/* <div className="space-y-4">
+                      {/* Future: Price Range */}
+                      {/* <div className="space-y-4">
                     <Label>Price Range (Optional)</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -347,69 +397,70 @@ export default function NewMonitorPage() {
                       </div>
                     </div>
                   </div> */}
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Step 3: Notification Settings */}
-          {currentStep === 3 && (
-            <Card className="animate-scale-in">
-              <CardHeader>
-                <CardTitle>Notification Settings</CardTitle>
-                <CardDescription>
-                  Choose how often you want to check for new listings
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <Label>Check Frequency</Label>
-                  <div className="grid gap-4">
-                    {[
-                      {
-                        value: "hourly",
-                        label: "Every Hour",
-                        description: "Get notified quickly about new listings",
-                      },
-                      {
-                        value: "daily",
-                        label: "Once Daily",
-                        description: "Perfect for most searches",
-                      },
-                      {
-                        value: "weekly",
-                        label: "Once Weekly",
-                        description: "For less urgent items",
-                      },
-                    ].map((option) => (
-                      <label
-                        key={option.value}
-                        className={cn(
-                          "flex items-start space-x-3 rounded-lg border p-4 cursor-pointer transition-all",
-                          watch("checkFrequency") === option.value
-                            ? "border-primary bg-primary/5"
-                            : "border-input hover:border-primary/50",
-                        )}
-                      >
-                        <input
-                          type="radio"
-                          value={option.value}
-                          {...register("checkFrequency")}
-                          className="mt-1"
-                        />
-                        <div className="space-y-1">
-                          <p className="font-medium">{option.label}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {option.description}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
+                    </CardContent>
+                  </Card>
                 </div>
+              )}
 
-                {/* Future: Email notification toggle */}
-                {/* <div className="flex items-center space-x-2">
+              {/* Step 3: Notification Settings */}
+              {currentStep === 3 && (
+                <Card className="animate-scale-in">
+                  <CardHeader>
+                    <CardTitle>Notification Settings</CardTitle>
+                    <CardDescription>
+                      Choose how often you want to check for new listings
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <Label>Check Frequency</Label>
+                      <div className="grid gap-4">
+                        {[
+                          {
+                            value: "hourly",
+                            label: "Every Hour",
+                            description:
+                              "Get notified quickly about new listings",
+                          },
+                          {
+                            value: "daily",
+                            label: "Once Daily",
+                            description: "Perfect for most searches",
+                          },
+                          {
+                            value: "weekly",
+                            label: "Once Weekly",
+                            description: "For less urgent items",
+                          },
+                        ].map((option) => (
+                          <label
+                            key={option.value}
+                            className={cn(
+                              "flex items-start space-x-3 rounded-lg border p-4 cursor-pointer transition-all",
+                              watch("checkFrequency") === option.value
+                                ? "border-primary bg-primary/5"
+                                : "border-input hover:border-primary/50",
+                            )}
+                          >
+                            <input
+                              type="radio"
+                              value={option.value}
+                              {...register("checkFrequency")}
+                              className="mt-1"
+                            />
+                            <div className="space-y-1">
+                              <p className="font-medium">{option.label}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {option.description}
+                              </p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Future: Email notification toggle */}
+                    {/* <div className="flex items-center space-x-2">
                   <Checkbox id="email-notifications" defaultChecked />
                   <Label
                     htmlFor="email-notifications"
@@ -418,86 +469,93 @@ export default function NewMonitorPage() {
                     Send email notifications when new matches are found
                   </Label>
                 </div> */}
-              </CardContent>
-            </Card>
-          )}
+                  </CardContent>
+                </Card>
+              )}
 
-          {/* Preview Card */}
-          {currentStep === 3 && watch("name") && watch("url") && (
-            <Card className="bg-muted/30">
-              <CardHeader>
-                <CardTitle className="text-lg">Monitor Preview</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Name:</span>
-                  <span className="text-sm font-medium">{watch("name")}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Location:
-                  </span>
-                  <span className="text-sm font-medium capitalize">
-                    {location || "Not specified"}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Check Frequency:
-                  </span>
-                  <span className="text-sm font-medium capitalize">
-                    {watch("checkFrequency")}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+              {/* Preview Card */}
+              {currentStep === 3 && watch("name") && watch("url") && (
+                <Card className="bg-muted/30">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Monitor Preview</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        Name:
+                      </span>
+                      <span className="text-sm font-medium">
+                        {watch("name")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        Location:
+                      </span>
+                      <span className="text-sm font-medium capitalize">
+                        {location || "Not specified"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        Check Frequency:
+                      </span>
+                      <span className="text-sm font-medium capitalize">
+                        {watch("checkFrequency")}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-          {/* Error Message */}
-          {error && (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 animate-shake">
-              <p className="text-sm text-destructive flex items-center">
-                <AlertCircle className="h-4 w-4 mr-2 animate-pulse" />
-                {error}
-              </p>
+              {/* Error Message */}
+              {error && (
+                <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 animate-shake">
+                  <p className="text-sm text-destructive flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-2 animate-pulse" />
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (currentStep > 1) {
+                      setCurrentStep(currentStep - 1);
+                    } else {
+                      router.push("/monitors");
+                    }
+                  }}
+                >
+                  {currentStep === 1 ? "Cancel" : "Previous"}
+                </Button>
+
+                {currentStep < 3 ? (
+                  <Button
+                    type="button"
+                    onClick={() => setCurrentStep(currentStep + 1)}
+                    disabled={
+                      (currentStep === 1 && !watch("name")) ||
+                      (currentStep === 2 && !watch("url"))
+                    }
+                  >
+                    Next Step
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    disabled={isLoading || !watch("name") || !watch("url")}
+                  >
+                    {isLoading ? "Creating Monitor..." : "Create Monitor"}
+                  </Button>
+                )}
+              </div>
             </div>
-          )}
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                if (currentStep > 1) {
-                  setCurrentStep(currentStep - 1);
-                } else {
-                  router.push("/monitors");
-                }
-              }}
-            >
-              {currentStep === 1 ? "Cancel" : "Previous"}
-            </Button>
-
-            {currentStep < 3 ? (
-              <Button
-                type="button"
-                onClick={() => setCurrentStep(currentStep + 1)}
-                disabled={
-                  (currentStep === 1 && !watch("name")) ||
-                  (currentStep === 2 && !watch("url"))
-                }
-              >
-                Next Step
-              </Button>
-            ) : (
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Creating Monitor..." : "Create Monitor"}
-              </Button>
-            )}
-          </div>
-        </div>
-      </form>
+          </form>
         </div>
       </div>
     </>

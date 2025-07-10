@@ -7,18 +7,18 @@ interface LoadingSkeletonProps {
   showImage?: boolean;
 }
 
-export const LoadingSkeleton = ({ 
-  className, 
-  lines = 3, 
+export const LoadingSkeleton = ({
+  className,
+  lines = 3,
   showAvatar = false,
-  showImage = false 
+  showImage = false,
 }: LoadingSkeletonProps) => {
   return (
     <div className={cn("animate-fade-in", className)}>
       {showImage && (
         <div className="w-full h-48 bg-muted rounded-lg mb-4 skeleton" />
       )}
-      
+
       {showAvatar && (
         <div className="flex items-center gap-4 mb-4">
           <div className="w-12 h-12 bg-muted rounded-full skeleton" />
@@ -28,7 +28,7 @@ export const LoadingSkeleton = ({
           </div>
         </div>
       )}
-      
+
       <div className="space-y-3">
         {Array.from({ length: lines }).map((_, i) => (
           <div
@@ -47,23 +47,34 @@ export const LoadingSkeleton = ({
 
 export const CardSkeleton = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("bg-card rounded-lg p-6 shadow-sm animate-fade-in", className)}>
+    <div
+      className={cn(
+        "bg-card rounded-lg p-6 shadow-sm animate-fade-in",
+        className,
+      )}
+    >
       <LoadingSkeleton lines={3} showAvatar />
     </div>
   );
 };
 
-export const GridSkeleton = ({ 
-  count = 6, 
-  columns = 3 
-}: { 
-  count?: number; 
+export const GridSkeleton = ({
+  count = 6,
+  columns = 3,
+}: {
+  count?: number;
   columns?: number;
 }) => {
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`}>
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${columns} gap-6`}
+    >
       {Array.from({ length: count }).map((_, i) => (
-        <CardSkeleton key={i} className="animate-fade-in" style={{ animationDelay: `${i * 100}ms` }} />
+        <CardSkeleton
+          key={i}
+          className="animate-fade-in"
+          style={{ animationDelay: `${i * 100}ms` }}
+        />
       ))}
     </div>
   );

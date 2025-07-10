@@ -1,7 +1,7 @@
 import { Navigation } from "@/components/navigation";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { Button } from "@marketplace-watcher/ui/components/button";
-import { Card } from "@marketplace-watcher/ui/components/card";
+import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Card } from "@marketplace-watcher/ui/components/ui/card";
 import { Bell, Clock, Mail, Search, Shield, TrendingDown } from "lucide-react";
 import Link from "next/link";
 
@@ -18,18 +18,31 @@ export default function Home() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight slide-in-up">
               Never Miss a Deal on
               <br />
-              <span className="text-primary bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent animate-gradient">Facebook Marketplace</span>
+              <span className="text-primary bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent animate-gradient">
+                Facebook Marketplace
+              </span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto slide-in-up" style={{ animationDelay: "0.1s" }}>
+            <p
+              className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto slide-in-up"
+              style={{ animationDelay: "0.1s" }}
+            >
               Set up automated monitors for items you're looking for and get
               instant notifications when new matches appear. Save time and snag
               the best deals before anyone else.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 slide-in-up" style={{ animationDelay: "0.2s" }}>
-              <Button asChild size="lg" className="text-base button-press animate-glow">
-                <Link href="/auth/signup">Get Started Free</Link>
+            <div
+              className="flex flex-col sm:flex-row gap-4 justify-center pt-4 slide-in-up"
+              style={{ animationDelay: "0.2s" }}
+            >
+              <Button asChild size="lg" className="text-base button-press ">
+                <Link href="/auth/sign-up">Get Started Free</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="text-base button-press hover-lift">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="text-base button-press hover-lift"
+              >
                 <Link href="#how-it-works">Learn More</Link>
               </Button>
             </div>
@@ -51,8 +64,8 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-fade-in">
-            <Card className="p-6 hover:shadow-lg transition-shadow card-3d">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 animate-float">
+            <Card className="p-6 hover:shadow-sm transition-shadow card-3d">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 ">
                 <Search className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">
@@ -64,8 +77,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow card-3d">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 animate-float">
+            <Card className="p-6 hover:shadow-sm transition-shadow card-3d">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 ">
                 <Bell className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">
@@ -77,8 +90,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow card-3d">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 animate-float">
+            <Card className="p-6 hover:shadow-sm transition-shadow card-3d">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 ">
                 <TrendingDown className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Price Drop Alerts</h3>
@@ -88,8 +101,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow card-3d">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 animate-float">
+            <Card className="p-6 hover:shadow-sm transition-shadow card-3d">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 ">
                 <Clock className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">24/7 Monitoring</h3>
@@ -99,8 +112,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow card-3d">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 animate-float">
+            <Card className="p-6 hover:shadow-sm transition-shadow card-3d">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 ">
                 <Mail className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Email Alerts</h3>
@@ -110,8 +123,8 @@ export default function Home() {
               </p>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow card-3d">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 animate-float">
+            <Card className="p-6 hover:shadow-sm transition-shadow card-3d">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 ">
                 <Shield className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Secure & Private</h3>
@@ -141,7 +154,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
             <ScrollReveal delay={100}>
               <div className="text-center">
-                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold animate-scale-in">
+                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold ">
                   1
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Create a Monitor</h3>
@@ -154,7 +167,7 @@ export default function Home() {
 
             <ScrollReveal delay={200}>
               <div className="text-center">
-                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold animate-scale-in">
+                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold ">
                   2
                 </div>
                 <h3 className="text-xl font-semibold mb-2">We Watch For You</h3>
@@ -167,7 +180,7 @@ export default function Home() {
 
             <ScrollReveal delay={300}>
               <div className="text-center">
-                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold animate-scale-in">
+                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold ">
                   3
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Get Notified</h3>
@@ -192,7 +205,7 @@ export default function Home() {
             bargains.
           </p>
           <Button asChild size="lg" className="text-base">
-            <Link href="/auth/signup">Start Monitoring Now</Link>
+            <Link href="/auth/sign-up">Start Monitoring Now</Link>
           </Button>
         </div>
       </section>

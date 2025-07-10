@@ -9,7 +9,8 @@
       "Bash(pnpm:*)",
       "Bash(turbo:*)",
       "Bash(mkdir:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
