@@ -82,3 +82,6 @@ ENV/
 # Misc
 *.bak
 *.backup
+
+.turbo
+**/.env
