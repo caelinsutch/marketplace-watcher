@@ -90,7 +90,7 @@ export const MonitorCard = ({
         id: monitor.id,
         userId,
       });
-      setIsActive(updated.isActive);
+      setIsActive(updated?.isActive ?? false);
       router.refresh();
     } catch (error) {
       console.error("Failed to toggle monitor:", error);

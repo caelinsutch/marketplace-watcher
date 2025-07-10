@@ -107,7 +107,7 @@ export const matchesRouter = {
         if (!acc[history.listingId]) {
           acc[history.listingId] = [];
         }
-        acc[history.listingId].push({
+        acc[history.listingId]?.push({
           price: history.price,
           recordedAt: history.recordedAt,
         });

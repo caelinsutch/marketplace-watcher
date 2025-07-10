@@ -45,13 +45,18 @@ export const LoadingSkeleton = ({
   );
 };
 
-export const CardSkeleton = ({ className }: { className?: string }) => {
+type CardSkeletonProps = {
+  className?: string;
+} & React.HTMLAttributes<HTMLDivElement>;
+
+export const CardSkeleton = ({ className, ...props }: CardSkeletonProps) => {
   return (
     <div
       className={cn(
         "bg-card rounded-lg p-6 shadow-sm animate-fade-in",
         className,
       )}
+      {...props}
     >
       <LoadingSkeleton lines={3} showAvatar />
     </div>

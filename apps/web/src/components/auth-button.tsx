@@ -8,7 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@marketplace-watcher/ui/components/ui/dropdown-menu";
-import { CircleUserRound, LogOut, Monitor, type User } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
+import { CircleUserRound, LogOut, Monitor } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
