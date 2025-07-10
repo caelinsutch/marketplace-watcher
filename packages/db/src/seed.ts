@@ -1,3 +1,9 @@
+import {
+  now,
+  subtractDays,
+  subtractHours,
+  subtractMinutes,
+} from "@marketplace-watcher/utils";
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -144,8 +150,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/123456789",
-      firstSeenAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractDays(now(), 2), // 2 days ago
+      lastSeenAt: now(),
     },
     {
       id: "fb_listing_2",
@@ -160,8 +166,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1549497538-303791108f95?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/223456789",
-      firstSeenAt: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractHours(now(), 5), // 5 hours ago
+      lastSeenAt: now(),
     },
     {
       id: "fb_listing_3",
@@ -175,8 +181,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/323456789",
-      firstSeenAt: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractMinutes(now(), 30), // 30 minutes ago
+      lastSeenAt: now(),
     },
 
     // MacBook Pro listings
@@ -193,8 +199,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/423456789",
-      firstSeenAt: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractHours(now(), 12), // 12 hours ago
+      lastSeenAt: now(),
     },
     {
       id: "fb_listing_5",
@@ -208,8 +214,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/523456789",
-      firstSeenAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractDays(now(), 3), // 3 days ago
+      lastSeenAt: now(),
     },
 
     // Road Bikes listings
@@ -226,8 +232,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/623456789",
-      firstSeenAt: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractHours(now(), 8), // 8 hours ago
+      lastSeenAt: now(),
     },
     {
       id: "fb_listing_7",
@@ -241,8 +247,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1502744688674-c619d1586c9e?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/723456789",
-      firstSeenAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractHours(now(), 1), // 1 hour ago
+      lastSeenAt: now(),
     },
 
     // Gaming Console listings (for inactive monitor)
@@ -258,8 +264,8 @@ async function seed() {
       primaryPhotoUrl:
         "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800",
       marketplaceUrl: "https://www.facebook.com/marketplace/item/823456789",
-      firstSeenAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
-      lastSeenAt: new Date(),
+      firstSeenAt: subtractDays(now(), 7), // 7 days ago
+      lastSeenAt: now(),
     },
   ];
 
@@ -273,21 +279,21 @@ async function seed() {
       id: "00000000-0000-0000-0010-000000000001",
       monitorId: "00000000-0000-0000-0000-000000000001",
       listingId: "fb_listing_1",
-      matchedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      matchedAt: subtractDays(now(), 2),
       isNotified: true,
     },
     {
       id: "00000000-0000-0000-0010-000000000002",
       monitorId: "00000000-0000-0000-0000-000000000001",
       listingId: "fb_listing_2",
-      matchedAt: new Date(Date.now() - 5 * 60 * 60 * 1000),
+      matchedAt: subtractHours(now(), 5),
       isNotified: false,
     },
     {
       id: "00000000-0000-0000-0010-000000000003",
       monitorId: "00000000-0000-0000-0000-000000000001",
       listingId: "fb_listing_3",
-      matchedAt: new Date(Date.now() - 30 * 60 * 1000),
+      matchedAt: subtractMinutes(now(), 30),
       isNotified: false,
     },
 
@@ -296,14 +302,14 @@ async function seed() {
       id: "00000000-0000-0000-0010-000000000004",
       monitorId: "00000000-0000-0000-0000-000000000002",
       listingId: "fb_listing_4",
-      matchedAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+      matchedAt: subtractHours(now(), 12),
       isNotified: true,
     },
     {
       id: "00000000-0000-0000-0010-000000000005",
       monitorId: "00000000-0000-0000-0000-000000000002",
       listingId: "fb_listing_5",
-      matchedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      matchedAt: subtractDays(now(), 3),
       isNotified: true,
     },
 
@@ -312,14 +318,14 @@ async function seed() {
       id: "00000000-0000-0000-0010-000000000006",
       monitorId: "00000000-0000-0000-0000-000000000003",
       listingId: "fb_listing_6",
-      matchedAt: new Date(Date.now() - 8 * 60 * 60 * 1000),
+      matchedAt: subtractHours(now(), 8),
       isNotified: false,
     },
     {
       id: "00000000-0000-0000-0010-000000000007",
       monitorId: "00000000-0000-0000-0000-000000000003",
       listingId: "fb_listing_7",
-      matchedAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      matchedAt: subtractHours(now(), 1),
       isNotified: false,
     },
 
@@ -328,7 +334,7 @@ async function seed() {
       id: "00000000-0000-0000-0010-000000000008",
       monitorId: "00000000-0000-0000-0000-000000000004",
       listingId: "fb_listing_8",
-      matchedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      matchedAt: subtractDays(now(), 7),
       isNotified: true,
     },
   ];
@@ -343,13 +349,13 @@ async function seed() {
       id: "00000000-0000-0000-0020-000000000001",
       listingId: "fb_listing_4",
       price: "2000.00",
-      recordedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      recordedAt: subtractDays(now(), 2),
     },
     {
       id: "00000000-0000-0000-0020-000000000002",
       listingId: "fb_listing_4",
       price: "1800.00",
-      recordedAt: new Date(Date.now() - 12 * 60 * 60 * 1000),
+      recordedAt: subtractHours(now(), 12),
     },
 
     // Vintage dresser price history
@@ -357,13 +363,13 @@ async function seed() {
       id: "00000000-0000-0000-0020-000000000003",
       listingId: "fb_listing_1",
       price: "400.00",
-      recordedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      recordedAt: subtractDays(now(), 3),
     },
     {
       id: "00000000-0000-0000-0020-000000000004",
       listingId: "fb_listing_1",
       price: "350.00",
-      recordedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      recordedAt: subtractDays(now(), 2),
     },
   ];
 

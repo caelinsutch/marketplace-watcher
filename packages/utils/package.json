@@ -1,0 +1,22 @@
+{
+  "name": "@marketplace-watcher/utils",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "files": ["src"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "biome check src/",
+    "format": "biome format src/ --write",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13"
+  },
+  "devDependencies": {
+    "@marketplace-watcher/typescript-config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

@@ -14,6 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@marketplace-watcher/ui/components/ui/tooltip";
+import { formatTimeAgo } from "@marketplace-watcher/utils";
 import {
   CalendarIcon,
   CheckIcon,
@@ -56,21 +57,6 @@ export const MatchCard = ({
   match,
   onMarkAsRead,
 }: { match: Match; onMarkAsRead: (id: string) => void }) => {
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - new Date(date).getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) {
-      return `${days} day${days > 1 ? "s" : ""} ago`;
-    }
-    if (hours > 0) {
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    }
-    return "Just now";
-  };
-
   return (
     <Card className="overflow-hidden hover:shadow-sm transition-all duration-200 card-hover">
       <ImageCarousel images={match.listing.photos} />

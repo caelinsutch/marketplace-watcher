@@ -28,6 +28,7 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
-    "postgres": "^3.4.7"
+    "postgres": "^3.4.7",
+    "@marketplace-watcher/utils": "workspace:*"
   }
 }

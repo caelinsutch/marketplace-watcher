@@ -5,6 +5,7 @@ import {
   monitorMatches,
   monitors,
 } from "@marketplace-watcher/db";
+import { now } from "@marketplace-watcher/utils";
 import { and, eq } from "drizzle-orm";
 import {
   type MarketplaceListing,
@@ -82,7 +83,7 @@ export const runMonitor = async (
             .update(listings)
             .set({
               ...listingData,
-              lastSeenAt: new Date(),
+              lastSeenAt: now(),
             })
             .where(eq(listings.id, listingData.id));
 
@@ -90,7 +91,7 @@ export const runMonitor = async (
           await db.insert(listingPriceHistory).values({
             listingId: listingData.id,
             price: listingData.price,
-            recordedAt: new Date(),
+            recordedAt: now(),
           });
 
           changedListingIds.push(listingData.id);
@@ -99,7 +100,7 @@ export const runMonitor = async (
           await db
             .update(listings)
             .set({
-              lastSeenAt: new Date(),
+              lastSeenAt: now(),
             })
             .where(eq(listings.id, listingData.id));
         }
@@ -111,7 +112,7 @@ export const runMonitor = async (
         await db.insert(listingPriceHistory).values({
           listingId: listingData.id,
           price: listingData.price,
-          recordedAt: new Date(),
+          recordedAt: now(),
         });
 
         changedListingIds.push(listingData.id);
@@ -133,7 +134,7 @@ export const runMonitor = async (
         await db.insert(monitorMatches).values({
           monitorId,
           listingId: listingData.id,
-          matchedAt: new Date(),
+          matchedAt: now(),
           isNotified: false,
         });
       }
@@ -189,7 +190,7 @@ const mapMarketplaceListingToDb = (marketplaceListing: MarketplaceListing) => {
     sellerInfo: null,
     marketplaceUrl:
       marketplaceListing.listingUrl || marketplaceListing.facebookUrl,
-    firstSeenAt: new Date(),
-    lastSeenAt: new Date(),
+    firstSeenAt: now(),
+    lastSeenAt: now(),
   };
 };

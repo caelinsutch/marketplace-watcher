@@ -6,7 +6,8 @@
     "zod": "^3.25.67",
     "drizzle-orm": "^0.44.2",
     "@orpc/server": "^1.5.2",
-    "@marketplace-watcher/db": "workspace:*"
+    "@marketplace-watcher/db": "workspace:*",
+    "@marketplace-watcher/utils": "workspace:*"
   },
   "devDependencies": {
     "@marketplace-watcher/typescript-config": "workspace:*",

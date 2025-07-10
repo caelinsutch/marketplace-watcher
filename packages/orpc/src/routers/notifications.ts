@@ -1,3 +1,4 @@
+import { now } from "@marketplace-watcher/utils";
 import { z } from "zod";
 import { base } from "./base";
 
@@ -59,7 +60,7 @@ export const notificationsRouter = {
       return {
         success: true,
         message: `Test notification sent to ${input.email}`,
-        sentAt: new Date(),
+        sentAt: now(),
       };
     }),
 };

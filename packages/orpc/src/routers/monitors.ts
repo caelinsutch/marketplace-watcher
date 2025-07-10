@@ -1,4 +1,5 @@
 import { db, monitors, users } from "@marketplace-watcher/db";
+import { now } from "@marketplace-watcher/utils";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { base } from "./base";
@@ -102,7 +103,7 @@ export const monitorsRouter = {
         .update(monitors)
         .set({
           ...input.data,
-          updatedAt: new Date(),
+          updatedAt: now(),
         })
         .where(
           and(eq(monitors.id, input.id), eq(monitors.userId, input.userId)),
@@ -161,7 +162,7 @@ export const monitorsRouter = {
         .update(monitors)
         .set({
           isActive: !monitor.isActive,
-          updatedAt: new Date(),
+          updatedAt: now(),
         })
         .where(eq(monitors.id, input.id))
         .returning();

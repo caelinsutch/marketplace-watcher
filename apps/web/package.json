@@ -15,6 +15,7 @@
     "@marketplace-watcher/db": "workspace:*",
     "@marketplace-watcher/orpc": "workspace:*",
     "@marketplace-watcher/ui": "workspace:*",
+    "@marketplace-watcher/utils": "workspace:*",
     "@orpc/client": "^1.5.2",
     "@orpc/server": "^1.5.2",
     "@supabase/ssr": "latest",

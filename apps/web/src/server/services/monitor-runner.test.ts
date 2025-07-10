@@ -1,4 +1,5 @@
 import { db, listings, monitorMatches } from "@marketplace-watcher/db";
+import { now } from "@marketplace-watcher/utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as facebookMarketplace from "../../clients/apify/facebook-marketplace";
 import { runMonitor } from "./monitor-runner";
@@ -43,8 +44,8 @@ describe("Monitor Runner Service", () => {
     url: "https://facebook.com/marketplace/test",
     isActive: true,
     checkFrequency: "daily",
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: now(),
+    updatedAt: now(),
   };
 
   const mockMarketplaceListing = {
@@ -188,8 +189,8 @@ describe("Monitor Runner Service", () => {
         price: "50", // Different price
         location: "New York",
         marketplaceUrl: "https://facebook.com/marketplace/item/123",
-        firstSeenAt: new Date(),
-        lastSeenAt: new Date(),
+        firstSeenAt: now(),
+        lastSeenAt: now(),
       };
 
       // Mock database to return active monitor
@@ -250,8 +251,8 @@ describe("Monitor Runner Service", () => {
         price: "100", // Same price
         location: "New York",
         marketplaceUrl: "https://facebook.com/marketplace/item/123",
-        firstSeenAt: new Date(),
-        lastSeenAt: new Date(),
+        firstSeenAt: now(),
+        lastSeenAt: now(),
       };
 
       // Mock database to return active monitor

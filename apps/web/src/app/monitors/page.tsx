@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@marketplace-watcher/ui/components/ui/dropdown-menu";
 import { Input } from "@marketplace-watcher/ui/components/ui/input";
+import { formatTimeAgo } from "@marketplace-watcher/utils";
 import {
   BellIcon,
   ClockIcon,
@@ -81,21 +82,6 @@ const MonitorCard = async ({
       default:
         return freq;
     }
-  };
-
-  const formatLastChecked = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) {
-      return `${days} day${days > 1 ? "s" : ""} ago`;
-    }
-    if (hours > 0) {
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    }
-    return "Just now";
   };
 
   return (
@@ -171,7 +157,7 @@ const MonitorCard = async ({
         </div>
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>{matchStats.totalMatches} total matches</span>
-          <span>Checked {formatLastChecked(monitor.updatedAt)}</span>
+          <span>Checked {formatTimeAgo(monitor.updatedAt)}</span>
         </div>
       </CardContent>
       <CardFooter className="pt-0">
@@ -209,12 +195,8 @@ export default async function MonitorsPage() {
     redirect("/auth/login");
   }
 
-  console.log("data", data);
-
   // Fetch monitors
   const monitors = await client.monitors.list({ userId: data.user.id });
-
-  console.log("monitors", monitors);
 
   return (
     <>

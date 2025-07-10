@@ -34,6 +34,10 @@ catalogs:
 importers:
 
   .:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -56,6 +60,9 @@ importers:
       '@marketplace-watcher/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@marketplace-watcher/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@orpc/client':
         specifier: ^1.5.2
         version: 1.5.2
@@ -156,6 +163,9 @@ importers:
 
   packages/db:
     dependencies:
+      '@marketplace-watcher/utils':
+        specifier: workspace:*
+        version: link:../utils
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -187,6 +197,9 @@ importers:
       '@marketplace-watcher/db':
         specifier: workspace:*
         version: link:../db
+      '@marketplace-watcher/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@orpc/server':
         specifier: ^1.5.2
         version: 1.5.2(ws@8.18.2)
@@ -285,6 +298,19 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 4.1.10
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.3
+
+  packages/utils:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+    devDependencies:
+      '@marketplace-watcher/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -2198,6 +2224,9 @@ packages:
   data-view-byte-offset@1.0.1:
     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
     engines: {node: '>= 0.4'}
+
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -5455,6 +5484,8 @@ snapshots:
       call-bound: 1.0.4
       es-errors: 1.3.0
       is-data-view: 1.0.2
+
+  dayjs@1.11.13: {}
 
   debug@3.2.7:
     dependencies:
