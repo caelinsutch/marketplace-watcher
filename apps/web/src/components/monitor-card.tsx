@@ -24,6 +24,7 @@ import {
   ClockIcon,
   DollarSignIcon,
   EyeIcon,
+  LoaderIcon,
   MapPinIcon,
   MoreVerticalIcon,
   PauseIcon,
@@ -59,6 +60,8 @@ export const MonitorCard = ({
 }: MonitorCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isActive, setIsActive] = useState(monitor.isActive);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
   // Extract location and price from URL
@@ -92,10 +95,35 @@ export const MonitorCard = ({
       });
       setIsActive(updated?.isActive ?? false);
       router.refresh();
+      setDropdownOpen(false);
     } catch (error) {
       console.error("Failed to toggle monitor:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (
+      !confirm(
+        "Are you sure you want to delete this monitor? This action cannot be undone.",
+      )
+    ) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await client.monitors.delete({
+        id: monitor.id,
+        userId,
+      });
+      router.refresh();
+      setDropdownOpen(false);
+    } catch (error) {
+      console.error("Failed to delete monitor:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -124,7 +152,7 @@ export const MonitorCard = ({
               )}
             </CardDescription>
           </div>
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreVerticalIcon className="h-4 w-4" />
@@ -147,8 +175,14 @@ export const MonitorCard = ({
               <DropdownMenuItem
                 onClick={handleToggleActive}
                 disabled={isLoading}
+                onSelect={(e) => e.preventDefault()}
               >
-                {isActive ? (
+                {isLoading ? (
+                  <>
+                    <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                    {isActive ? "Pausing..." : "Resuming..."}
+                  </>
+                ) : isActive ? (
                   <>
                     <PauseIcon className="mr-2 h-4 w-4" />
                     Pause
@@ -161,9 +195,23 @@ export const MonitorCard = ({
                 )}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">
-                <TrashIcon className="mr-2 h-4 w-4" />
-                Delete
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={isDeleting}
+                onSelect={(e) => e.preventDefault()}
+              >
+                {isDeleting ? (
+                  <>
+                    <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <TrashIcon className="mr-2 h-4 w-4" />
+                    Delete
+                  </>
+                )}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

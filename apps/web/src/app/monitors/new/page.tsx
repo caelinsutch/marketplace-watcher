@@ -125,7 +125,7 @@ export default function NewMonitorPage() {
       } else if (currentStep === 2 && watch("url")) {
         setCurrentStep(3);
       }
-      // On step 3, let the form submit naturally
+      // On step 3, don't auto-submit - user must click the Create Monitor button
     }
   };
 
@@ -242,41 +242,40 @@ export default function NewMonitorPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
-            <div className="space-y-6">
-              {/* Step 1: Basic Information */}
-              {currentStep === 1 && (
-                <Card className="animate-scale-in">
-                  <CardHeader>
-                    <CardTitle>Basic Information</CardTitle>
-                    <CardDescription>
-                      Give your monitor a name and description to easily
-                      identify it later
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Monitor Name</Label>
-                      <Input
-                        id="name"
-                        placeholder="e.g., Vintage Furniture under $200"
-                        {...register("name")}
-                        className="text-lg"
-                      />
-                      {errors.name && (
-                        <p className="text-sm text-destructive flex items-center">
-                          <AlertCircle className="h-4 w-4 mr-1" />
-                          {errors.name.message}
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        Choose a descriptive name that helps you remember what
-                        this monitor tracks
+          <div className="space-y-6" onKeyDown={handleKeyDown}>
+            {/* Step 1: Basic Information */}
+            {currentStep === 1 && (
+              <Card className="animate-scale-in">
+                <CardHeader>
+                  <CardTitle>Basic Information</CardTitle>
+                  <CardDescription>
+                    Give your monitor a name and description to easily identify
+                    it later
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Monitor Name</Label>
+                    <Input
+                      id="name"
+                      placeholder="e.g., Vintage Furniture under $200"
+                      {...register("name")}
+                      className="text-lg"
+                    />
+                    {errors.name && (
+                      <p className="text-sm text-destructive flex items-center">
+                        <AlertCircle className="h-4 w-4 mr-1" />
+                        {errors.name.message}
                       </p>
-                    </div>
+                    )}
+                    <p className="text-sm text-muted-foreground">
+                      Choose a descriptive name that helps you remember what
+                      this monitor tracks
+                    </p>
+                  </div>
 
-                    {/* Future: Add description field */}
-                    {/* <div className="space-y-2">
+                  {/* Future: Add description field */}
+                  {/* <div className="space-y-2">
                   <Label htmlFor="description">Description (Optional)</Label>
                   <Textarea
                     id="description"
@@ -284,15 +283,15 @@ export default function NewMonitorPage() {
                     className="min-h-[100px]"
                   />
                 </div> */}
-                  </CardContent>
-                </Card>
-              )}
+                </CardContent>
+              </Card>
+            )}
 
-              {/* Step 2: Search Settings */}
-              {currentStep === 2 && (
-                <div className="space-y-6 animate-scale-in">
-                  {/* Search Type Toggle - Future Enhancement */}
-                  {/* <Card>
+            {/* Step 2: Search Settings */}
+            {currentStep === 2 && (
+              <div className="space-y-6 animate-scale-in">
+                {/* Search Type Toggle - Future Enhancement */}
+                {/* <Card>
                 <CardContent className="pt-6">
                   <div className="flex gap-4">
                     <Button
@@ -317,54 +316,52 @@ export default function NewMonitorPage() {
                 </CardContent>
               </Card> */}
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Facebook Marketplace URL</CardTitle>
-                      <CardDescription>
-                        Paste the URL from your Facebook Marketplace search
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="url">Marketplace URL</Label>
-                        <Input
-                          id="url"
-                          type="url"
-                          placeholder="https://www.facebook.com/marketplace/nyc/search/?query=desk"
-                          {...register("url")}
-                          className="font-mono text-sm"
-                        />
-                        {errors.url && (
-                          <p className="text-sm text-destructive flex items-center">
-                            <AlertCircle className="h-4 w-4 mr-1" />
-                            {errors.url.message}
-                          </p>
-                        )}
-                        <div className="text-sm text-muted-foreground space-y-2">
-                          <p>How to get your Marketplace URL:</p>
-                          <ol className="list-decimal list-inside space-y-1 ml-2">
-                            <li>Go to Facebook Marketplace</li>
-                            <li>Search for items using your criteria</li>
-                            <li>
-                              Apply any filters (price, location, category)
-                            </li>
-                            <li>Copy the URL from your browser</li>
-                          </ol>
-                        </div>
-                      </div>
-
-                      {location && (
-                        <div className="bg-muted/50 rounded-lg p-4 flex items-center">
-                          <MapPin className="h-5 w-5 mr-2 text-muted-foreground" />
-                          <span className="text-sm">
-                            Searching in:{" "}
-                            <strong className="capitalize">{location}</strong>
-                          </span>
-                        </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Facebook Marketplace URL</CardTitle>
+                    <CardDescription>
+                      Paste the URL from your Facebook Marketplace search
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="url">Marketplace URL</Label>
+                      <Input
+                        id="url"
+                        type="url"
+                        placeholder="https://www.facebook.com/marketplace/nyc/search/?query=desk"
+                        {...register("url")}
+                        className="font-mono text-sm"
+                      />
+                      {errors.url && (
+                        <p className="text-sm text-destructive flex items-center">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {errors.url.message}
+                        </p>
                       )}
+                      <div className="text-sm text-muted-foreground space-y-2">
+                        <p>How to get your Marketplace URL:</p>
+                        <ol className="list-decimal list-inside space-y-1 ml-2">
+                          <li>Go to Facebook Marketplace</li>
+                          <li>Search for items using your criteria</li>
+                          <li>Apply any filters (price, location, category)</li>
+                          <li>Copy the URL from your browser</li>
+                        </ol>
+                      </div>
+                    </div>
 
-                      {/* Future: Price Range */}
-                      {/* <div className="space-y-4">
+                    {location && (
+                      <div className="bg-muted/50 rounded-lg p-4 flex items-center">
+                        <MapPin className="h-5 w-5 mr-2 text-muted-foreground" />
+                        <span className="text-sm">
+                          Searching in:{" "}
+                          <strong className="capitalize">{location}</strong>
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Future: Price Range */}
+                    {/* <div className="space-y-4">
                     <Label>Price Range (Optional)</Label>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -397,70 +394,70 @@ export default function NewMonitorPage() {
                       </div>
                     </div>
                   </div> */}
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
-              {/* Step 3: Notification Settings */}
-              {currentStep === 3 && (
-                <Card className="animate-scale-in">
-                  <CardHeader>
-                    <CardTitle>Notification Settings</CardTitle>
-                    <CardDescription>
-                      Choose how often you want to check for new listings
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-4">
-                      <Label>Check Frequency</Label>
-                      <div className="grid gap-4">
-                        {[
-                          {
-                            value: "hourly",
-                            label: "Every Hour",
-                            description:
-                              "Get notified quickly about new listings",
-                          },
-                          {
-                            value: "daily",
-                            label: "Once Daily",
-                            description: "Perfect for most searches",
-                          },
-                          {
-                            value: "weekly",
-                            label: "Once Weekly",
-                            description: "For less urgent items",
-                          },
-                        ].map((option) => (
-                          <label
-                            key={option.value}
-                            className={cn(
-                              "flex items-start space-x-3 rounded-lg border p-4 cursor-pointer transition-all",
-                              watch("checkFrequency") === option.value
-                                ? "border-primary bg-primary/5"
-                                : "border-input hover:border-primary/50",
-                            )}
-                          >
-                            <input
-                              type="radio"
-                              value={option.value}
-                              {...register("checkFrequency")}
-                              className="mt-1"
-                            />
-                            <div className="space-y-1">
-                              <p className="font-medium">{option.label}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {option.description}
-                              </p>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
+            {/* Step 3: Notification Settings */}
+            {currentStep === 3 && (
+              <Card className="animate-scale-in">
+                <CardHeader>
+                  <CardTitle>Notification Settings</CardTitle>
+                  <CardDescription>
+                    Choose how often you want to check for new listings
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <Label>Check Frequency</Label>
+                    <div className="grid gap-4">
+                      {[
+                        {
+                          value: "hourly",
+                          label: "Every Hour",
+                          description:
+                            "Get notified quickly about new listings",
+                        },
+                        {
+                          value: "daily",
+                          label: "Once Daily",
+                          description: "Perfect for most searches",
+                        },
+                        {
+                          value: "weekly",
+                          label: "Once Weekly",
+                          description: "For less urgent items",
+                        },
+                      ].map((option) => (
+                        <label
+                          key={option.value}
+                          className={cn(
+                            "flex items-start space-x-3 rounded-lg border p-4 cursor-pointer transition-all",
+                            watch("checkFrequency") === option.value
+                              ? "border-primary bg-primary/5"
+                              : "border-input hover:border-primary/50",
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            value={option.value}
+                            {...register("checkFrequency")}
+                            className="mt-1"
+                          />
+                          <div className="space-y-1">
+                            <p className="font-medium">{option.label}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {option.description}
+                            </p>
+                          </div>
+                        </label>
+                      ))}
                     </div>
+                  </div>
 
-                    {/* Future: Email notification toggle */}
-                    {/* <div className="flex items-center space-x-2">
+                  {/* Future: Email notification toggle */}
+                  {/* <div className="flex items-center space-x-2">
                   <Checkbox id="email-notifications" defaultChecked />
                   <Label
                     htmlFor="email-notifications"
@@ -469,93 +466,85 @@ export default function NewMonitorPage() {
                     Send email notifications when new matches are found
                   </Label>
                 </div> */}
-                  </CardContent>
-                </Card>
-              )}
+                </CardContent>
+              </Card>
+            )}
 
-              {/* Preview Card */}
-              {currentStep === 3 && watch("name") && watch("url") && (
-                <Card className="bg-muted/30">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Monitor Preview</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        Name:
-                      </span>
-                      <span className="text-sm font-medium">
-                        {watch("name")}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        Location:
-                      </span>
-                      <span className="text-sm font-medium capitalize">
-                        {location || "Not specified"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        Check Frequency:
-                      </span>
-                      <span className="text-sm font-medium capitalize">
-                        {watch("checkFrequency")}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+            {/* Preview Card */}
+            {currentStep === 3 && watch("name") && watch("url") && (
+              <Card className="bg-muted/30">
+                <CardHeader>
+                  <CardTitle className="text-lg">Monitor Preview</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Name:</span>
+                    <span className="text-sm font-medium">{watch("name")}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Location:
+                    </span>
+                    <span className="text-sm font-medium capitalize">
+                      {location || "Not specified"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Check Frequency:
+                    </span>
+                    <span className="text-sm font-medium capitalize">
+                      {watch("checkFrequency")}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
-              {/* Error Message */}
-              {error && (
-                <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 animate-shake">
-                  <p className="text-sm text-destructive flex items-center">
-                    <AlertCircle className="h-4 w-4 mr-2 animate-pulse" />
-                    {error}
-                  </p>
-                </div>
-              )}
+            {/* Error Message */}
+            {error && (
+              <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 animate-shake">
+                <p className="text-sm text-destructive flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-2 animate-pulse" />
+                  {error}
+                </p>
+              </div>
+            )}
 
-              {/* Navigation Buttons */}
-              <div className="flex justify-between">
+            {/* Navigation Buttons */}
+            <div className="flex justify-between">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (currentStep > 1) {
+                    setCurrentStep(currentStep - 1);
+                  } else {
+                    router.push("/monitors");
+                  }
+                }}
+              >
+                {currentStep === 1 ? "Cancel" : "Previous"}
+              </Button>
+
+              {currentStep < 3 ? (
                 <Button
                   type="button"
-                  variant="outline"
-                  onClick={() => {
-                    if (currentStep > 1) {
-                      setCurrentStep(currentStep - 1);
-                    } else {
-                      router.push("/monitors");
-                    }
-                  }}
+                  onClick={() => setCurrentStep(currentStep + 1)}
+                  disabled={
+                    (currentStep === 1 && !watch("name")) ||
+                    (currentStep === 2 && !watch("url"))
+                  }
                 >
-                  {currentStep === 1 ? "Cancel" : "Previous"}
+                  Next Step
                 </Button>
-
-                {currentStep < 3 ? (
-                  <Button
-                    type="button"
-                    onClick={() => setCurrentStep(currentStep + 1)}
-                    disabled={
-                      (currentStep === 1 && !watch("name")) ||
-                      (currentStep === 2 && !watch("url"))
-                    }
-                  >
-                    Next Step
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    disabled={isLoading || !watch("name") || !watch("url")}
-                  >
-                    {isLoading ? "Creating Monitor..." : "Create Monitor"}
-                  </Button>
-                )}
-              </div>
+              ) : (
+                <Button onClick={handleSubmit(onSubmit)}>
+                  {isLoading ? "Creating Monitor..." : "Create Monitor"}
+                </Button>
+              )}
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </>
