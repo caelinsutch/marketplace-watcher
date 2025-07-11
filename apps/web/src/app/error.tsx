@@ -11,7 +11,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@marketplace-watcher/ui/components/ui/collapsible";
+} from "@marketplace-watcher/ui/components/base/collapsible";
 import { ChevronDown, Home, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
