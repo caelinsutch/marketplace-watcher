@@ -1,0 +1,24 @@
+{
+  "name": "@marketplace-watcher/monitor-runner",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "type:check": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@marketplace-watcher/db": "workspace:*",
+    "@marketplace-watcher/utils": "workspace:*",
+    "@marketplace-watcher/clients": "workspace:*",
+    "drizzle-orm": "^0.44.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@marketplace-watcher/typescript-config": "workspace:*",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

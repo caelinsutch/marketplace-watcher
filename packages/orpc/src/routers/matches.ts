@@ -102,7 +102,7 @@ export const matchesRouter = {
 
       // Group price histories by listing
       const priceHistoryMap = priceHistories.reduce<
-        Record<string, Array<{ price: string; recordedAt: Date }>>
+        Record<string, Array<{ price: number; recordedAt: Date }>>
       >((acc, history) => {
         if (!acc[history.listingId]) {
           acc[history.listingId] = [];
@@ -121,7 +121,8 @@ export const matchesRouter = {
       }));
 
       return matchesWithPriceHistory;
-    }),
+    })
+    .callable(),
 
   markNotified: base
     .input(
@@ -154,7 +155,8 @@ export const matchesRouter = {
         .returning();
 
       return updated;
-    }),
+    })
+    .callable(),
 
   getStats: base
     .input(
@@ -199,7 +201,8 @@ export const matchesRouter = {
         totalMatches: totalMatches[0]?.count || 0,
         unnotifiedMatches: unnotifiedMatches[0]?.count || 0,
       };
-    }),
+    })
+    .callable(),
 
   markAllNotified: base
     .input(
@@ -237,5 +240,6 @@ export const matchesRouter = {
         .returning();
 
       return { count: updated.length };
-    }),
+    })
+    .callable(),
 };

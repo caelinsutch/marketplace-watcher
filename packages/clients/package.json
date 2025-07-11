@@ -1,0 +1,18 @@
+{
+  "name": "@marketplace-watcher/clients",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "type:check": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@marketplace-watcher/typescript-config": "workspace:*",
+    "apify-client": "^2.12.6"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  }
+}

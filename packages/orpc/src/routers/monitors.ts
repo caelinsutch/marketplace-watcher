@@ -29,7 +29,8 @@ export const monitorsRouter = {
         .orderBy(desc(monitors.createdAt));
 
       return results;
-    }),
+    })
+    .callable(),
 
   get: base
     .input(
@@ -53,7 +54,8 @@ export const monitorsRouter = {
       }
 
       return monitor;
-    }),
+    })
+    .callable(),
 
   create: base
     .input(
@@ -88,7 +90,8 @@ export const monitorsRouter = {
         .returning();
 
       return monitor;
-    }),
+    })
+    .callable(),
 
   update: base
     .input(
@@ -115,7 +118,8 @@ export const monitorsRouter = {
       }
 
       return monitor;
-    }),
+    })
+    .callable(),
 
   delete: base
     .input(
@@ -137,7 +141,8 @@ export const monitorsRouter = {
       }
 
       return { success: true };
-    }),
+    })
+    .callable(),
 
   toggleActive: base
     .input(
@@ -168,5 +173,44 @@ export const monitorsRouter = {
         .returning();
 
       return updated;
-    }),
+    })
+    .callable(),
+
+  run: base
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        userId: z.string().uuid(),
+      }),
+    )
+    .handler(async ({ input, errors }) => {
+      // Verify the monitor belongs to the user
+      const [monitor] = await db
+        .select()
+        .from(monitors)
+        .where(
+          and(eq(monitors.id, input.id), eq(monitors.userId, input.userId)),
+        );
+
+      if (!monitor) {
+        throw errors.NOT_FOUND({
+          message: "Monitor not found",
+        });
+      }
+
+      if (!monitor.isActive) {
+        throw errors.BAD_REQUEST({
+          message: "Monitor is not active",
+        });
+      }
+
+      // Import and run the monitor
+      const { runMonitor } = await import(
+        "@marketplace-watcher/monitor-runner"
+      );
+      const result = await runMonitor(input.id);
+
+      return result;
+    })
+    .callable(),
 };

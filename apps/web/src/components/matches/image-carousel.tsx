@@ -16,18 +16,18 @@ export const ImageCarousel = ({ images }: { images: string[] }) => {
 
   if (images.length === 0) {
     return (
-      <div className="w-full h-64 bg-muted rounded-t-lg flex items-center justify-center">
+      <div className="w-full aspect-square bg-muted flex items-center justify-center">
         <span className="text-muted-foreground">No image available</span>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full h-64 bg-black rounded-t-lg overflow-hidden group">
+    <div className="relative w-full aspect-square bg-black overflow-hidden group">
       <img
         src={images[currentIndex]}
         alt="Listing image"
-        className="object-contain"
+        className="w-full h-full object-cover"
       />
       {images.length > 1 && (
         <>

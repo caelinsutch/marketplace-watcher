@@ -49,6 +49,14 @@ export default function NewMonitorPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [createdMonitorId, setCreatedMonitorId] = useState<string | null>(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const [runResult, setRunResult] = useState<{
+    status: "success" | "error";
+    message: string;
+    matchCount?: number;
+  } | null>(null);
   const router = useRouter();
 
   const {
@@ -97,7 +105,7 @@ export default function NewMonitorPage() {
     setError(null);
 
     try {
-      await client.monitors.create({
+      const monitor = await client.monitors.create({
         userId,
         userEmail: userEmail || undefined,
         data: {
@@ -106,7 +114,13 @@ export default function NewMonitorPage() {
           checkFrequency: data.checkFrequency,
         },
       });
-      router.push("/monitors");
+
+      if (monitor) {
+        setCreatedMonitorId(monitor.id);
+        setShowConfirmation(true);
+      } else {
+        throw new Error("Failed to create monitor");
+      }
     } catch (error: unknown) {
       setError(
         error instanceof Error ? error.message : "Failed to create monitor",
@@ -153,6 +167,152 @@ export default function NewMonitorPage() {
     { number: 2, title: "Search Settings", icon: MapPin },
     { number: 3, title: "Notifications", icon: Bell },
   ];
+
+  const handleRunMonitor = async () => {
+    if (!createdMonitorId || !userId) return;
+
+    setIsRunning(true);
+    setRunResult(null);
+
+    try {
+      const result = await client.monitors.run({
+        id: createdMonitorId,
+        userId,
+      });
+
+      if (result.status === "success") {
+        setRunResult({
+          status: "success",
+          message: `Found ${result.totalListingIds.length} listings! ${result.changedListingIds.length} are new.`,
+          matchCount: result.totalListingIds.length,
+        });
+      } else {
+        setRunResult({
+          status: "error",
+          message: result.error || "Failed to run monitor",
+        });
+      }
+    } catch (error) {
+      setRunResult({
+        status: "error",
+        message:
+          error instanceof Error ? error.message : "Failed to run monitor",
+      });
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  // If showing confirmation, render confirmation UI
+  if (showConfirmation) {
+    return (
+      <>
+        <Navigation />
+        <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-2xl mx-auto page-fade-in">
+            <Card className="animate-scale-in">
+              <CardHeader className="text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="h-8 w-8 text-primary animate-success" />
+                </div>
+                <CardTitle className="text-2xl">
+                  Monitor Created Successfully!
+                </CardTitle>
+                <CardDescription>
+                  Your monitor "{watch("name")}" has been created and will check
+                  for new listings {watch("checkFrequency")}.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-muted/50 rounded-lg p-4">
+                  <h3 className="font-medium mb-2">What happens next?</h3>
+                  <p className="text-sm text-muted-foreground">
+                    You can run your monitor now to see immediate results, or
+                    wait for it to run automatically based on your schedule.
+                  </p>
+                </div>
+
+                {runResult && (
+                  <div
+                    className={cn(
+                      "rounded-lg p-4 animate-scale-in",
+                      runResult.status === "success"
+                        ? "bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900"
+                        : "bg-destructive/10 border border-destructive/50",
+                    )}
+                  >
+                    <div className="flex items-start">
+                      {runResult.status === "success" ? (
+                        <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mr-2 mt-0.5" />
+                      ) : (
+                        <AlertCircle className="h-5 w-5 text-destructive mr-2 mt-0.5" />
+                      )}
+                      <div>
+                        <p
+                          className={cn(
+                            "font-medium",
+                            runResult.status === "success"
+                              ? "text-green-800 dark:text-green-400"
+                              : "text-destructive",
+                          )}
+                        >
+                          {runResult.message}
+                        </p>
+                        {runResult.status === "success" &&
+                          runResult.matchCount !== undefined &&
+                          runResult.matchCount > 0 && (
+                            <p className="text-sm text-muted-foreground mt-1">
+                              View your matches on the monitor page.
+                            </p>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleRunMonitor}
+                    disabled={isRunning}
+                    className="flex-1"
+                    variant={
+                      runResult?.status === "success" ? "outline" : "default"
+                    }
+                  >
+                    {isRunning ? (
+                      <>Running Monitor...</>
+                    ) : runResult?.status === "success" ? (
+                      <>Run Again</>
+                    ) : (
+                      <>Run Monitor Now</>
+                    )}
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      if (runResult?.status === "success" && createdMonitorId) {
+                        router.push(`/monitors/${createdMonitorId}/matches`);
+                      } else {
+                        router.push("/monitors");
+                      }
+                    }}
+                    variant={
+                      runResult?.status === "success" ? "default" : "outline"
+                    }
+                    className="flex-1"
+                  >
+                    {runResult?.status === "success"
+                      ? "Go to Results"
+                      : "Go to Monitors"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

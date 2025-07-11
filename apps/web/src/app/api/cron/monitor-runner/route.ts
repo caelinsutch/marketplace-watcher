@@ -1,9 +1,9 @@
 import { db, monitors } from "@marketplace-watcher/db";
+import { runMonitor } from "@marketplace-watcher/monitor-runner";
 import { processBatches } from "@marketplace-watcher/utils";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { env } from "../../../../env";
-import { runMonitor } from "../../../../server/services/monitor-runner";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

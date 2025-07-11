@@ -5,7 +5,7 @@ export type Match = {
   listing: {
     id: string;
     title: string;
-    price: string;
+    price: number;
     location: string | null;
     locationDetails: {
       city?: string;
@@ -20,7 +20,7 @@ export type Match = {
     lastSeenAt: Date;
   };
   priceHistory: Array<{
-    price: string;
+    price: number;
     recordedAt: Date;
   }>;
 };

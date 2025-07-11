@@ -140,7 +140,7 @@ async function seed() {
     {
       id: "fb_listing_1",
       title: "Beautiful Mid-Century Modern Dresser",
-      price: "350.00",
+      price: 350,
       location: "Brooklyn, NY",
       locationDetails: { cityDisplayName: "Brooklyn", state: "NY" },
       photos: [
@@ -156,7 +156,7 @@ async function seed() {
     {
       id: "fb_listing_2",
       title: "Antique Oak Dining Table Set",
-      price: "450.00",
+      price: 450,
       location: "Manhattan, NY",
       locationDetails: { cityDisplayName: "Manhattan", state: "NY" },
       photos: [
@@ -172,7 +172,7 @@ async function seed() {
     {
       id: "fb_listing_3",
       title: "Retro Velvet Sofa - Must Go!",
-      price: "275.00",
+      price: 275,
       location: "Queens, NY",
       locationDetails: { cityDisplayName: "Queens", state: "NY" },
       photos: [
@@ -189,7 +189,7 @@ async function seed() {
     {
       id: "fb_listing_4",
       title: 'MacBook Pro 16" M1 Max - Like New',
-      price: "1800.00",
+      price: 1800,
       location: "San Francisco, CA",
       locationDetails: { cityDisplayName: "San Francisco", state: "CA" },
       photos: [
@@ -205,7 +205,7 @@ async function seed() {
     {
       id: "fb_listing_5",
       title: 'MacBook Pro 14" M2 Pro 1TB',
-      price: "1500.00",
+      price: 1500,
       location: "Oakland, CA",
       locationDetails: { cityDisplayName: "Oakland", state: "CA" },
       photos: [
@@ -222,7 +222,7 @@ async function seed() {
     {
       id: "fb_listing_6",
       title: "Trek Domane SL5 Road Bike - 56cm",
-      price: "850.00",
+      price: 850,
       location: "Seattle, WA",
       locationDetails: { cityDisplayName: "Seattle", state: "WA" },
       photos: [
@@ -238,7 +238,7 @@ async function seed() {
     {
       id: "fb_listing_7",
       title: "Specialized Allez Sport - Great Starter Bike",
-      price: "600.00",
+      price: 600,
       location: "Bellevue, WA",
       locationDetails: { cityDisplayName: "Bellevue", state: "WA" },
       photos: [
@@ -255,7 +255,7 @@ async function seed() {
     {
       id: "fb_listing_8",
       title: "PS5 Bundle with Extra Controller",
-      price: "550.00",
+      price: 550,
       location: "Los Angeles, CA",
       locationDetails: { cityDisplayName: "Los Angeles", state: "CA" },
       photos: [
@@ -348,13 +348,13 @@ async function seed() {
     {
       id: "00000000-0000-0000-0020-000000000001",
       listingId: "fb_listing_4",
-      price: "2000.00",
+      price: 2000,
       recordedAt: subtractDays(now(), 2),
     },
     {
       id: "00000000-0000-0000-0020-000000000002",
       listingId: "fb_listing_4",
-      price: "1800.00",
+      price: 1800,
       recordedAt: subtractHours(now(), 12),
     },
 
@@ -362,13 +362,13 @@ async function seed() {
     {
       id: "00000000-0000-0000-0020-000000000003",
       listingId: "fb_listing_1",
-      price: "400.00",
+      price: 400,
       recordedAt: subtractDays(now(), 3),
     },
     {
       id: "00000000-0000-0000-0020-000000000004",
       listingId: "fb_listing_1",
-      price: "350.00",
+      price: 350,
       recordedAt: subtractDays(now(), 2),
     },
   ];

@@ -1,4 +1,8 @@
 import {
+  type MarketplaceListing,
+  getMarketplaceListings,
+} from "@marketplace-watcher/clients";
+import {
   db,
   listingPriceHistory,
   listings,
@@ -7,10 +11,6 @@ import {
 } from "@marketplace-watcher/db";
 import { now } from "@marketplace-watcher/utils";
 import { and, eq } from "drizzle-orm";
-import {
-  type MarketplaceListing,
-  getMarketplaceListings,
-} from "../../clients/apify/facebook-marketplace";
 
 export type MonitorRunResult = {
   changedListingIds: string[];
@@ -50,6 +50,11 @@ export const runMonitor = async (
     // Fetch listings from Facebook Marketplace
     const marketplaceListings = await getMarketplaceListings(monitor.url, 1);
 
+    console.log(
+      "marketplaceListings",
+      JSON.stringify(marketplaceListings, null, 2),
+    );
+
     if (!marketplaceListings || marketplaceListings.length === 0) {
       return {
         changedListingIds: [],
@@ -74,8 +79,8 @@ export const runMonitor = async (
 
       if (existingListing) {
         // Check if price has changed
-        const currentPrice = Number.parseFloat(listingData.price);
-        const existingPrice = Number.parseFloat(existingListing.price);
+        const currentPrice = listingData.price;
+        const existingPrice = existingListing.price;
 
         if (currentPrice !== existingPrice) {
           // Update listing with new price
@@ -157,14 +162,22 @@ export const runMonitor = async (
 };
 
 const mapMarketplaceListingToDb = (marketplaceListing: MarketplaceListing) => {
-  const price = marketplaceListing.listing_price?.amount || "0";
+  // Parse price from cents string to integer
+  const priceInCents = marketplaceListing.listing_price
+    ?.amount_with_offset_in_currency
+    ? Number.parseInt(
+        marketplaceListing.listing_price.amount_with_offset_in_currency,
+        10,
+      )
+    : 0;
+
   const location = marketplaceListing.location?.reverse_geocode;
 
   return {
     id: marketplaceListing.id,
     title: marketplaceListing.marketplace_listing_title || "",
     description: null,
-    price,
+    price: priceInCents,
     condition: null,
     location: location?.city || null,
     strikeThroughPrice: null,

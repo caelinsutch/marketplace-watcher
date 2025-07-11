@@ -14,7 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@marketplace-watcher/ui/components/base/tooltip";
-import { formatTimeAgo } from "@marketplace-watcher/utils";
+import { formatCentsToPrice, formatTimeAgo } from "@marketplace-watcher/utils";
 import {
   CalendarIcon,
   CheckIcon,
@@ -28,16 +28,16 @@ const PriceDisplay = ({
   listing,
   priceHistory,
 }: { listing: Match["listing"]; priceHistory: Match["priceHistory"] }) => {
-  const currentPrice = Number.parseFloat(listing.price);
+  const currentPrice = listing.price;
   const previousPrice =
-    priceHistory.length > 0 && priceHistory[0]
-      ? Number.parseFloat(priceHistory[0].price)
-      : null;
+    priceHistory.length > 0 && priceHistory[0] ? priceHistory[0].price : null;
   const hasPriceDropped = previousPrice && previousPrice > currentPrice;
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-2xl font-bold">${currentPrice.toFixed(2)}</span>
+      <span className="text-2xl font-bold">
+        {formatCentsToPrice(currentPrice)}
+      </span>
       {hasPriceDropped && (
         <>
           <Badge variant="destructive" className="gap-1">
@@ -45,7 +45,7 @@ const PriceDisplay = ({
             Price Drop
           </Badge>
           <span className="text-sm text-muted-foreground line-through">
-            ${previousPrice.toFixed(2)}
+            {formatCentsToPrice(previousPrice)}
           </span>
         </>
       )}
@@ -58,8 +58,14 @@ export const MatchCard = ({
   onMarkAsRead,
 }: { match: Match; onMarkAsRead: (id: string) => void }) => {
   return (
-    <Card className="overflow-hidden hover:shadow-sm transition-all duration-200 card-hover">
-      <ImageCarousel images={match.listing.photos} />
+    <Card className="overflow-hidden hover:shadow-sm transition-all duration-200 card-hover pt-0 pb-6">
+      <ImageCarousel
+        images={
+          match.listing.primaryPhotoUrl
+            ? [match.listing.primaryPhotoUrl, ...match.listing.photos]
+            : match.listing.photos
+        }
+      />
       <CardHeader className="space-y-2">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-lg line-clamp-2">
@@ -76,20 +82,18 @@ export const MatchCard = ({
           priceHistory={match.priceHistory}
         />
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          {match.listing.location && (
-            <span className="flex items-center gap-1">
-              <MapPinIcon className="h-3 w-3" />
-              {match.listing.locationDetails?.cityDisplayName ||
-                match.listing.location}
-            </span>
-          )}
+      <CardContent className="space-y-2">
+        {match.listing.location && (
           <span className="flex items-center gap-1">
-            <CalendarIcon className="h-3 w-3" />
-            Posted {formatTimeAgo(match.listing.firstSeenAt)}
+            <MapPinIcon className="h-3 w-3" />
+            {match.listing.locationDetails?.cityDisplayName ||
+              match.listing.location}
           </span>
-        </div>
+        )}
+        <span className="flex items-center gap-1">
+          <CalendarIcon className="h-3 w-3" />
+          Posted {formatTimeAgo(match.listing.firstSeenAt)}
+        </span>
       </CardContent>
       <CardFooter className="gap-2">
         <Button asChild className="flex-1">

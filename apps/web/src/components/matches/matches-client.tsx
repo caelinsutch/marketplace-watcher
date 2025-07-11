@@ -44,7 +44,7 @@ const EmptyState = ({ onlyUnread }: { onlyUnread: boolean }) => (
 );
 
 const LoadingSkeleton = () => (
-  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 stagger-fade-in">
+  <div className="grid gap-6 grid-cols-2 sm:grid-cols-3  lg:grid-cols-4  stagger-fade-in">
     {[...Array(4)].map((_, i) => (
       <Card
         key={i}
@@ -299,7 +299,7 @@ export const MatchesClient = ({
         <LoadingSkeleton />
       ) : matches.length > 0 ? (
         <>
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 stagger-fade-in">
+          <div className="grid gap-6 grid-cols-2 sm:grid-cols-3  lg:grid-cols-4  stagger-fade-in">
             {matches.map((match) => (
               <MatchCard
                 key={match.id}

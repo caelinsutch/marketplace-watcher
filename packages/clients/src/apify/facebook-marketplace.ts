@@ -49,15 +49,8 @@ export const getMarketplaceListings = async (
   console.log("Results from dataset");
   const { items } = await apifyClient.dataset(run.defaultDatasetId).listItems();
 
+  const listingItems = items as MarketplaceListing[];
+
   // Map raw items to the new type
-  return items.map((item: any) => ({
-    id: item.id,
-    facebookUrl: item.facebookUrl,
-    listingUrl: item.listingUrl,
-    marketplace_listing_title: item.marketplace_listing_title,
-    listing_price: item.listing_price,
-    primary_listing_photo: item.primary_listing_photo,
-    location: item.location,
-    // Add other fields as needed
-  }));
+  return listingItems;
 };

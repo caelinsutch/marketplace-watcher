@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   decimal,
+  integer,
   jsonb,
   pgTable,
   text,
@@ -37,7 +38,7 @@ export const monitors = pgTable("monitors", {
 export const listings = pgTable("listings", {
   id: varchar("id", { length: 255 }).primaryKey(), // Facebook Marketplace ID
   title: text("title").notNull(),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  price: integer("price").notNull(),
   location: text("location"),
 
   // Location details
@@ -61,7 +62,7 @@ export const listingPriceHistory = pgTable("listing_price_history", {
   listingId: varchar("listing_id", { length: 255 })
     .notNull()
     .references(() => listings.id, { onDelete: "cascade" }),
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  price: integer("price").notNull(),
   recordedAt: timestamp("recorded_at").defaultNow().notNull(),
 });
 
@@ -126,7 +127,7 @@ export const notificationListings = pgTable("notification_listings", {
 
   // Additional context for this listing in the notification
   reason: varchar("reason", { length: 50 }), // 'new_match', 'price_dropped', 'back_in_stock', 'new_listing', etc.
-  previousPrice: decimal("previous_price", { precision: 10, scale: 2 }), // For price drop notifications
+  previousPrice: integer("previous_price"), // For price drop notifications
   matchScore: decimal("match_score", { precision: 5, scale: 2 }), // Relevance score if applicable
 
   createdAt: timestamp("created_at").defaultNow().notNull(),

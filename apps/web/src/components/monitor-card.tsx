@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@marketplace-watcher/ui/components/base/dropdown-menu";
-import { formatTimeAgo } from "@marketplace-watcher/utils";
+import { formatCentsToPrice, formatTimeAgo } from "@marketplace-watcher/utils";
 import {
   BellIcon,
   ClockIcon,
@@ -72,6 +72,10 @@ export const MonitorCard = ({
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const query = searchParams.get("query") || monitor.name;
+
+  // Convert dollar amounts from URL to cents for display
+  const minPriceInCents = minPrice ? Number.parseInt(minPrice, 10) * 100 : null;
+  const maxPriceInCents = maxPrice ? Number.parseInt(maxPrice, 10) * 100 : null;
 
   const formatCheckFrequency = (freq: string) => {
     switch (freq) {
@@ -140,14 +144,16 @@ export const MonitorCard = ({
                   .replace(/-/g, " ")
                   .replace(/\b\w/g, (l) => l.toUpperCase())}
               </span>
-              {(minPrice || maxPrice) && (
+              {(minPriceInCents !== null || maxPriceInCents !== null) && (
                 <span className="flex items-center gap-1">
                   <DollarSignIcon className="h-3 w-3" />
-                  {minPrice && maxPrice
-                    ? `$${minPrice} - $${maxPrice}`
-                    : minPrice
-                      ? `$${minPrice}+`
-                      : `Up to $${maxPrice}`}
+                  {minPriceInCents !== null && maxPriceInCents !== null
+                    ? `${formatCentsToPrice(minPriceInCents)} - ${formatCentsToPrice(maxPriceInCents)}`
+                    : minPriceInCents !== null
+                      ? `${formatCentsToPrice(minPriceInCents)}+`
+                      : maxPriceInCents !== null
+                        ? `Up to ${formatCentsToPrice(maxPriceInCents)}`
+                        : ""}
                 </span>
               )}
             </CardDescription>

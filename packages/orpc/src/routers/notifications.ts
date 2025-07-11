@@ -26,7 +26,8 @@ export const notificationsRouter = {
       };
 
       return settings;
-    }),
+    })
+    .callable(),
 
   updateSettings: base
     .input(
@@ -40,7 +41,8 @@ export const notificationsRouter = {
       mockSettings[input.userId] = input.settings;
 
       return input.settings;
-    }),
+    })
+    .callable(),
 
   sendTestNotification: base
     .input(
@@ -62,5 +64,6 @@ export const notificationsRouter = {
         message: `Test notification sent to ${input.email}`,
         sentAt: now(),
       };
-    }),
+    })
+    .callable(),
 };

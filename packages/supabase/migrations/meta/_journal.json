@@ -8,6 +8,13 @@
       "when": 1752106121594,
       "tag": "0000_spooky_magdalene",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1752250154422,
+      "tag": "0001_handy_stone_men",
+      "breakpoints": true
     }
   ]
 }

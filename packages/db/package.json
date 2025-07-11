@@ -12,7 +12,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/seed.ts",
-    "db:reset": "supabase reset"
+    "db:reset": "supabase db reset"
   },
   "devDependencies": {
     "@marketplace-watcher/typescript-config": "workspace:*",

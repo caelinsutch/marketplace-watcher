@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "type:check": "turbo type:check",
     "format-lint": "biome check --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
