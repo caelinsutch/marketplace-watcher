@@ -1,5 +1,6 @@
 "use client";
 
+import { getURL } from "@/lib/get-url";
 import { createClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@marketplace-watcher/ui/components/ui/button";
@@ -58,7 +59,7 @@ export function SignUpForm({
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          emailRedirectTo: `${getURL()}/monitors`,
         },
       });
       if (error) throw error;
