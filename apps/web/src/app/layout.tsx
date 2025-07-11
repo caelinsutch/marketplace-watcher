@@ -3,10 +3,9 @@ import { ThemeProvider } from "next-themes";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import "../lib/orpc.server";
+import { getURL } from "@/lib/get-url";
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+const defaultUrl = getURL();
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
