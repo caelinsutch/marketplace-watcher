@@ -1,5 +1,5 @@
-import { Badge } from "@marketplace-watcher/ui/components/ui/badge";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Badge } from "@marketplace-watcher/ui/components/base/badge";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 
 export function EnvVarWarning() {
   return (

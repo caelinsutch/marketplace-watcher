@@ -1,8 +1,8 @@
 "use client";
 
 import { client } from "@/lib/orpc";
-import { Badge } from "@marketplace-watcher/ui/components/ui/badge";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Badge } from "@marketplace-watcher/ui/components/base/badge";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import {
   Card,
   CardContent,
@@ -10,14 +10,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@marketplace-watcher/ui/components/ui/card";
+} from "@marketplace-watcher/ui/components/base/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@marketplace-watcher/ui/components/ui/dropdown-menu";
+} from "@marketplace-watcher/ui/components/base/dropdown-menu";
 import { formatTimeAgo } from "@marketplace-watcher/utils";
 import {
   BellIcon,

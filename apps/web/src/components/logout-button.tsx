@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/supabase/client";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import { useRouter } from "next/navigation";
 
 export function LogoutButton() {

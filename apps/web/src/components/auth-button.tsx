@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@marketplace-watcher/ui/components/ui/dropdown-menu";
+} from "@marketplace-watcher/ui/components/base/dropdown-menu";
 import type { User } from "@supabase/supabase-js";
 import { CircleUserRound, LogOut, Monitor } from "lucide-react";
 import Link from "next/link";

@@ -3,7 +3,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@marketplace-watcher/ui/components/ui/card";
+} from "@marketplace-watcher/ui/components/base/card";
 
 export default async function Page({
   searchParams,

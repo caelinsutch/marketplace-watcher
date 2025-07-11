@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@marketplace-watcher/ui/components/ui/dropdown-menu";
+} from "@marketplace-watcher/ui/components/base/dropdown-menu";
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";

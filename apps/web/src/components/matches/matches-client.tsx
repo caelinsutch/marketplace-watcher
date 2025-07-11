@@ -2,8 +2,11 @@
 
 import { client } from "@/lib/orpc";
 import type { Match, Monitor, SortBy, SortOrder } from "@/types/matches";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
-import { Card, CardContent } from "@marketplace-watcher/ui/components/ui/card";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
+import {
+  Card,
+  CardContent,
+} from "@marketplace-watcher/ui/components/base/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +14,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@marketplace-watcher/ui/components/ui/dropdown-menu";
+} from "@marketplace-watcher/ui/components/base/dropdown-menu";
 import {
   ArrowLeftIcon,
   BellOffIcon,

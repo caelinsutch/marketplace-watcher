@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@marketplace-watcher/ui/components/ui/card";
+} from "@marketplace-watcher/ui/components/base/card";
 import {
   Collapsible,
   CollapsibleContent,

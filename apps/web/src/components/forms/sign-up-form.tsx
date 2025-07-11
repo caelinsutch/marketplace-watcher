@@ -3,16 +3,16 @@
 import { getURL } from "@/lib/get-url";
 import { createClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@marketplace-watcher/ui/components/ui/card";
-import { Input } from "@marketplace-watcher/ui/components/ui/input";
-import { Label } from "@marketplace-watcher/ui/components/ui/label";
+} from "@marketplace-watcher/ui/components/base/card";
+import { Input } from "@marketplace-watcher/ui/components/base/input";
+import { Label } from "@marketplace-watcher/ui/components/base/label";
 import { cn } from "@marketplace-watcher/ui/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

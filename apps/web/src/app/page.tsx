@@ -1,7 +1,7 @@
 import { Navigation } from "@/components/navigation";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
-import { Card } from "@marketplace-watcher/ui/components/ui/card";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
+import { Card } from "@marketplace-watcher/ui/components/base/card";
 import { Bell, Clock, Mail, Search, Shield, TrendingDown } from "lucide-react";
 import Link from "next/link";
 

@@ -1,19 +1,19 @@
 "use client";
 
 import type { Match } from "@/types/matches";
-import { Badge } from "@marketplace-watcher/ui/components/ui/badge";
-import { Button } from "@marketplace-watcher/ui/components/ui/button";
+import { Badge } from "@marketplace-watcher/ui/components/base/badge";
+import { Button } from "@marketplace-watcher/ui/components/base/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@marketplace-watcher/ui/components/ui/card";
+} from "@marketplace-watcher/ui/components/base/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@marketplace-watcher/ui/components/ui/tooltip";
+} from "@marketplace-watcher/ui/components/base/tooltip";
 import { formatTimeAgo } from "@marketplace-watcher/utils";
 import {
   CalendarIcon,
